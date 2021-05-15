@@ -1,18 +1,28 @@
-
 PFont fontMenu,fontButton,fontInfo;
 
+// Windows' Constants
+public static final int MAIN_MENU = 0;
+
 // A few constants
-private final color GREEN = color(0,255,0);
-private final color RED = color(255,0,0);
-private final color BLUE = color(0,0,255);
-private final color YELLOW = color(255,255,0);
+final color GREEN = color(0,255,0);
+final color RED = color(255,0,0);
+final color BLUE = color(0,0,255);
+final color YELLOW = color(255,255,0);
+final color WHITE = color(255,255,255);
+
+int window;
 
 //Buttons
 Button playButton,exitButton;
 
+//Background
+StarsBackground starsBackground;
+
 void setup(){
   //Window
   size(800,600);
+  window = MAIN_MENU;
+  starsBackground = new StarsBackground();
   
   //Text
   fontMenu = createFont("Resurces/Fonts/Roose Sally.otf",90);
@@ -29,7 +39,11 @@ void setup(){
 
 //Draw
 void draw(){
-  drawMainMenu();
+  switch(window){
+    case MAIN_MENU:
+      drawMainMenu();
+      break;
+  }
 }
 
 // Debug info
@@ -38,12 +52,14 @@ void debugInfo(){
   textAlign(0);
   fill(YELLOW);
   text("FPS: "+(int)frameRate,0,12);
-  text("Mouse: "+mouseX+","+mouseY,0,32);
+  text("Mouse: "+mouseX+","+mouseY,0,30);
+  text("PlayerControl: OFF",0,48);
 }
 
 //MainMenu
 void drawMainMenu(){
   background(0);
+  starsBackground.draw();
   debugInfo();
   rectMode(CENTER);
   textAlign(CENTER);

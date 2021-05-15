@@ -1,6 +1,6 @@
-public interface gameConstants{
-  //variables are public static final
+public final class gameConstants{
+  // Variables are public static final
   
-  //Player Constants
-  int FULL_HEATH = 100;
+  // Player Constants
+  public final int FULL_HEATH = 100;
 }
