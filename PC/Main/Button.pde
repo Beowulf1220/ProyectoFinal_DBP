@@ -63,4 +63,8 @@ public class Button{
     }
     return isPressed;
   }
+  
+  void pressed(){
+    col = WHITE;
+  }
 }
