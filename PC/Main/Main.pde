@@ -6,6 +6,7 @@ public static final int MAIN_MENU = 1;
 public static final int SETTINGS_MENU = 2;
 public static final int SELECT_ROL_MENU = 3;
 public static final int LEVEL_MENU = 4;
+public static final int STAGE = 5;
 
 // A few constants
 final color GREEN = color(0,255,0);
@@ -17,6 +18,9 @@ final color WHITE = color(255);
 final color BLACK = color(0);
 
 int window;
+
+// Level variable
+int stageLevel;
 
 // Debug Information
 boolean debugInfo;
@@ -39,7 +43,7 @@ Button levelButton[];
 StarsBackground starsBackground;
 
 // Player
-Player player;
+Player localPlayer;
 String playerName;
 
 //Images
@@ -117,8 +121,11 @@ void draw(){
      case LEVEL_MENU:
        drawLevelMenu();
        break;
-    default:
-      text("Error: window not found!",width/2,height/2);
-      break;
+     case STAGE:
+       drawStage(stageLevel);
+       break;
+     default:
+       text("Error: window not found!",width/2,height/2);
+       break;
   }
 }

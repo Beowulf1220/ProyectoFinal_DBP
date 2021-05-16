@@ -114,6 +114,7 @@ void keyPressed() {
   if(window == LOGIN_MENU){
     // Start with 'ENTER'
     if (key==ENTER && playerName.length() > 0) {
+      if(playerName.equals("GOD")) localPlayer = new Player("GOD",9999,10);
       window = MAIN_MENU;
     }
     // Delete the last one character in the string
@@ -153,10 +154,21 @@ void mousePressed(){
   else if(changeButton.isPressed() && window == SETTINGS_MENU){
     window = LOGIN_MENU;
     playerName = "";
-    player = null;
+    localPlayer = null;
   }
   else if((serverButton.isPressed() || singleButton.isPressed()) && window == SELECT_ROL_MENU){
     window = LEVEL_MENU;
+  }
+  else if(window == LEVEL_MENU){
+    // Check for every level button
+    for(int i = 0; i < 10; i++){
+      if(levelButton[i].isPressed()){
+        window = STAGE;
+        stageLevel = (i+1);
+        starsBackground.setStarsSpeed(3.5);
+        break;
+      }
+    }
   }
 }
 
@@ -167,5 +179,5 @@ void debugInfo(){
   fill(YELLOW);
   text("FPS: "+(int)frameRate,0,12);
   text("Mouse: "+mouseX+","+mouseY,0,30);
-  text("PlayerControl: OFF",0,48);
+  text("PlayerControl: OFF",0,48); // ...
 }
