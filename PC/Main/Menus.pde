@@ -141,7 +141,7 @@ void keyPressed() {
 
 /////////////////////////// Mouse pressed ( Buttons ) //////////////////////////////////////////////
 void mousePressed(){
-  
+  clickSound.play();
   if(exitButton.isPressed() && window == MAIN_MENU){
     System.exit(0);
   }
@@ -165,7 +165,7 @@ void mousePressed(){
   else if(window == LEVEL_MENU){
     // Check for every level button
     for(int i = 0; i < 10; i++){
-      if(levelButton[i].isPressed()){
+      if(levelButton[i].isPressed() && localPlayer != null){
         window = STAGE;
         stageLevel = (i+1);
         starsBackground.setStarsSpeed(3.5);

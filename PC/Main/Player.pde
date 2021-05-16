@@ -6,13 +6,18 @@ public class Player{
   private int score;  // Current score
   private int highestScore;
   private int save; // Game progress
+  private int playerNumber;
   
   // Positon
-  float x,y;
+  private float x,y;
   
   // Player avatar
-  PImage avatar[];
-  int avatarFrame;
+  private PImage avatar[];
+  private int avatarFrame;
+  
+  // Health Points
+  private int health = 100;
+  private int shield = 0;
   
   // Builder
   public Player(String name,int highestScore, int save, int playerNumber){
@@ -33,6 +38,7 @@ public class Player{
     this.name = name;
     this.highestScore = score;
     this.save = save;
+    this.playerNumber = playerNumber;
     score = 0;
     y = height - 100;
   }
@@ -52,8 +58,20 @@ public class Player{
     return name;
   }
   
+  int getHealth(){
+    return health;
+  }
+  
+  int getShield(){
+    return shield;
+  }
+  
   int getScore(){
     return score;
+  }
+  
+  int getPlayerNumber(){
+    return playerNumber;
   }
   
   // Intersting methods
@@ -61,5 +79,20 @@ public class Player{
     image(avatar[avatarFrame], x, y);
     avatarFrame++;
     if(avatarFrame >= 2) avatarFrame = 0;
+  }
+}
+
+// Player interface
+void playerInerface(){
+  textFont(fontInterface);
+  textAlign(0);
+  fill(GREEN,200);
+  textSize(14);
+  text("Player"+localPlayer.getPlayerNumber()+": "+localPlayer.getName()+
+  "    Health:"+localPlayer.getHealth()+
+  "    Shield:"+localPlayer.getShield()+
+  "    Score:"+localPlayer.getScore(),0,12);
+  if(isCooperativeMode){
+    // another one player ...
   }
 }

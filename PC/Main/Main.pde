@@ -1,4 +1,6 @@
-PFont fontMenu,fontButton,fontInfo,fontDefault,fontSpecial;
+import processing.sound.*;
+
+PFont fontMenu,fontButton,fontInfo,fontDefault,fontSpecial,fontInterface;
 
 // Windows' Constants
 public static final int LOGIN_MENU = 0;
@@ -43,14 +45,28 @@ Button levelButton[];
 // Background stars
 StarsBackground starsBackground;
 
-// Player
+// Local Player
 Player localPlayer;
 String playerName;
 
-//Images
+// Another player
+Player otherPlayer;
+
+// Meteorites
+final int MAX_METEORITES = 4;
+Meteorite meteorites[];
+
+// Are we in cooperative mode game?
+boolean isCooperativeMode;
+
+//Images menu
 PImage menuImg;
 
+//Images game
 PImage meteoriteGIF[];
+
+// Sounds
+SoundFile clickSound;
 
 void setup(){
   //Window
@@ -61,6 +77,10 @@ void setup(){
   
   debugInfo = false;
   cheats = false;
+  isCooperativeMode = false;
+  
+  // Sounds
+  clickSound = new SoundFile(this,"Resources/Sounds/click.wav",false);
   
   //Text fonts
   fontMenu = createFont("Resources/Fonts/Roose Sally.otf",90);
@@ -68,6 +88,7 @@ void setup(){
   fontInfo = createFont("Resources/Fonts/PixelatedPusab.ttf",12);
   fontDefault = createFont("Resources/Fonts/1942.ttf",48);
   fontSpecial = createFont("Resources/Fonts/BadlyStamped.ttf",48);
+  fontInterface = createFont("Resources/Fonts/bauserif.ttf",48);
   
   //Buttons' Menu
   playButton = new Button("Play",120,height-70,200,100,GREEN);
@@ -99,6 +120,10 @@ void setup(){
   // Frame rate
   frameRate(30);
   
+  // Enemies
+  meteorites = new Meteorite[MAX_METEORITES];
+  for(int i = 0; i < MAX_METEORITES; i++) meteorites[i] = new Meteorite((int)random(32,256),random(1,10));
+  
   //Image menu
   float rando = random(0,1);
   if(rando >= 0.5) menuImg = loadImage("Resources/Images/rusiaMenu.png");
@@ -112,7 +137,6 @@ void setup(){
 
 //Draw
 void draw(){
-  
   switch(window){
     case MAIN_MENU:
       drawMainMenu();
