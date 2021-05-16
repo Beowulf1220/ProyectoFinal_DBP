@@ -114,7 +114,10 @@ void keyPressed() {
   if(window == LOGIN_MENU){
     // Start with 'ENTER'
     if (key==ENTER && playerName.length() > 0) {
-      if(playerName.equals("GOD")) localPlayer = new Player("GOD",9999,10);
+      if(playerName.equals("GOD")){
+        localPlayer = new Player("GOD",9999,10,1);
+        cheats = true;
+      }
       window = MAIN_MENU;
     }
     // Delete the last one character in the string
@@ -178,6 +181,7 @@ void debugInfo(){
   textAlign(0);
   fill(YELLOW);
   text("FPS: "+(int)frameRate,0,12);
-  text("Mouse: "+mouseX+","+mouseY,0,30);
-  text("PlayerControl: OFF",0,48); // ...
+  text("Mouse: "+mouseX+","+mouseY,0,24);
+  text("PlayerControl: OFF",0,36);
+  text("Cheats: "+(cheats ? "ON" : "OFF"),0,48);
 }

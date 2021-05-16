@@ -24,6 +24,7 @@ int stageLevel;
 
 // Debug Information
 boolean debugInfo;
+boolean cheats;
 
 // Main Menu Buttons
 Button playButton,exitButton,settingsButton;
@@ -49,6 +50,8 @@ String playerName;
 //Images
 PImage menuImg;
 
+PImage meteoriteGIF[];
+
 void setup(){
   //Window
   surface.setTitle("Space Odissey - Powered by Godzilla");
@@ -57,6 +60,7 @@ void setup(){
   starsBackground = new StarsBackground();
   
   debugInfo = false;
+  cheats = false;
   
   //Text fonts
   fontMenu = createFont("Resources/Fonts/Roose Sally.otf",90);
@@ -100,6 +104,10 @@ void setup(){
   if(rando >= 0.5) menuImg = loadImage("Resources/Images/rusiaMenu.png");
   else menuImg = loadImage("Resources/Images/ovniMenu.png");
   menuImg.resize(320, 240);
+  
+  // Meteorite Images
+  meteoriteGIF = new PImage[20];
+  for(int i = 0; i < 20; i++) meteoriteGIF[i] = loadImage("Resources/Images/meteorite/frame-"+(i+1)+".gif");
 }
 
 //Draw
