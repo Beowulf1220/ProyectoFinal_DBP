@@ -2,7 +2,9 @@
 void drawLoginMenu(){
   background(BLACK);
   starsBackground.draw();
+  if(debugInfo) debugInfo();
   
+  rectMode(CENTER);
   textAlign(CENTER);
   
   fill(WHITE);
@@ -12,6 +14,11 @@ void drawLoginMenu(){
   fill(GREEN);
   textFont(fontDefault);
   text("Player:"+playerName,width/2,2*height/3);
+  
+  fill(WHITE);
+  textFont(fontDefault);
+  textSize(24);
+  text("Press ENTER to continue",width/2,height-24);
 }
 
 ///////////////////////////////////// MainMenu ///////////////////////////////////
@@ -19,7 +26,7 @@ void drawMainMenu(){
   background(0);
   
   starsBackground.draw();
-  debugInfo();
+  if(debugInfo) debugInfo();
   
   rectMode(CENTER);
   textAlign(CENTER);
@@ -47,16 +54,17 @@ void drawMainMenu(){
 void drawSelectRolMenu(){
   background(BLACK);
   starsBackground.draw();
-  debugInfo();
+  if(debugInfo) debugInfo();
   
   rectMode(CENTER);
   textAlign(CENTER);
   
   textFont(fontMenu);
   fill(WHITE);
-  text("Select a Rol",width/2,height/4);
+  text("Select a game mode",width/2,height/4);
   
   textFont(fontButton);
+  singleButton.drawButton();
   serverButton.drawButton();
   joinButton.drawButton();
   
@@ -67,7 +75,7 @@ void drawSelectRolMenu(){
 void drawSettingsMenu(){
   background(BLACK);
   starsBackground.draw();
-  debugInfo();
+  if(debugInfo) debugInfo();
   
   rectMode(CENTER);
   textAlign(CENTER);
@@ -81,6 +89,24 @@ void drawSettingsMenu(){
   textSize(28);;
   backButton.drawButton();
   changeButton.drawButton();
+}
+
+/////////////////////////////// Select Level Menu ////////////////////////////////////////
+void drawLevelMenu(){
+  background(BLACK);
+  starsBackground.draw();
+  if(debugInfo) debugInfo();
+  
+  rectMode(CENTER);
+  textAlign(CENTER);
+  
+  textFont(fontMenu);
+  fill(WHITE);
+  text("Select a Level",width/2,height/6);
+  
+  textFont(fontButton);
+  for(int i = 0; i < 10; i++) levelButton[i].drawButton();
+  backButton.drawButton();
 }
 
 //////////////////// Keyboard interface /////////////////////////////////////////
@@ -98,5 +124,48 @@ void keyPressed() {
     else if(key >= 32 && key <= 125){
       if(playerName.length() < 16) playerName = playerName + key;
     }
+    if(keyCode == SHIFT){
+      debugInfo = !debugInfo;
+      println(debugInfo);
+    }
+  }else{
+    if(keyCode == SHIFT){
+      debugInfo = !debugInfo;
+    }
   }  
+}
+
+/////////////////////////// Mouse pressed ( Buttons ) //////////////////////////////////////////////
+void mousePressed(){
+  
+  if(exitButton.isPressed() && window == MAIN_MENU){
+    System.exit(0);
+  }
+  else if(playButton.isPressed() && window == MAIN_MENU){
+    window = SELECT_ROL_MENU;
+  }
+  else if(settingsButton.isPressed() && window == MAIN_MENU){
+    window = SETTINGS_MENU;
+  }
+  else if(backButton.isPressed() && (window == SELECT_ROL_MENU || window == SETTINGS_MENU || window == LEVEL_MENU)){
+    window = MAIN_MENU;
+  }
+  else if(changeButton.isPressed() && window == SETTINGS_MENU){
+    window = LOGIN_MENU;
+    playerName = "";
+    player = null;
+  }
+  else if((serverButton.isPressed() || singleButton.isPressed()) && window == SELECT_ROL_MENU){
+    window = LEVEL_MENU;
+  }
+}
+
+/////////////////////// Debug info ///////////////////////////////////
+void debugInfo(){
+  textFont(fontInfo);
+  textAlign(0);
+  fill(YELLOW);
+  text("FPS: "+(int)frameRate,0,12);
+  text("Mouse: "+mouseX+","+mouseY,0,30);
+  text("PlayerControl: OFF",0,48);
 }

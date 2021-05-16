@@ -1,3 +1,5 @@
+// Button Class for all our buttons
+
 public class Button{
   
   //Attributes

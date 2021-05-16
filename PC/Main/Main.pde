@@ -5,6 +5,7 @@ public static final int LOGIN_MENU = 0;
 public static final int MAIN_MENU = 1;
 public static final int SETTINGS_MENU = 2;
 public static final int SELECT_ROL_MENU = 3;
+public static final int LEVEL_MENU = 4;
 
 // A few constants
 final color GREEN = color(0,255,0);
@@ -17,16 +18,22 @@ final color BLACK = color(0);
 
 int window;
 
+// Debug Information
+boolean debugInfo;
+
 // Main Menu Buttons
 Button playButton,exitButton,settingsButton;
 // Select Rol Menu Buttons
-Button serverButton,joinButton;
+Button serverButton,joinButton,singleButton;
 
 // Back Button
 Button backButton;
 
 // Change Profile Button
 Button changeButton;
+
+// Levels' Buttons
+Button levelButton[];
 
 // Background stars
 StarsBackground starsBackground;
@@ -40,9 +47,12 @@ PImage menuImg;
 
 void setup(){
   //Window
+  surface.setTitle("Space Odissey - Powered by Godzilla");
   size(800,600);
   window = LOGIN_MENU;
   starsBackground = new StarsBackground();
+  
+  debugInfo = false;
   
   //Text fonts
   fontMenu = createFont("Resources/Fonts/Roose Sally.otf",90);
@@ -56,11 +66,24 @@ void setup(){
   exitButton = new Button("Exit",width-120,height-70,200,100,GREEN);
   settingsButton = new Button("Settings",width/2,height-70,280,100,GREEN);
   
-  serverButton = new Button("Server",width/2,height/2-60,200,100,LIGHT_BLUE);
-  joinButton = new Button("Join",width/2,height/2+60,200,100,LIGHT_BLUE);
+  singleButton = new Button("Single player",width/2,height/2-30,410,100,LIGHT_BLUE);
+  serverButton = new Button("Host",width/2+105,height/2+90,200,100,LIGHT_BLUE);
+  joinButton = new Button("Join",width/2-105,height/2+90,200,100,LIGHT_BLUE);
   
-  backButton = new Button("Back to menu",width-210,height-60,380,100);
-  changeButton = new Button("Change profile",210,height-60,380,100);
+  backButton = new Button("Back to menu",width-200,height-60,380,100);
+  changeButton = new Button("Change profile",200,height-60,380,100);
+  
+  // Levels' Buttons
+  levelButton = new Button[10];
+  float x=175,y=250;
+  for(int i = 0; i < 10; i++){
+    levelButton[i] = new Button(""+(i+1),x,y,100,100,YELLOW);
+    x += 110;
+    if(i==4){
+      x = 175; // Row
+      y += 110; // Colum
+    }
+  }
   
   //Player
   playerName = "";
@@ -91,34 +114,11 @@ void draw(){
      case SETTINGS_MENU:
        drawSettingsMenu();
        break;
+     case LEVEL_MENU:
+       drawLevelMenu();
+       break;
     default:
       text("Error: window not found!",width/2,height/2);
       break;
-  }
-}
-
-// Debug info
-void debugInfo(){
-  textFont(fontInfo);
-  textAlign(0);
-  fill(YELLOW);
-  text("FPS: "+(int)frameRate,0,12);
-  text("Mouse: "+mouseX+","+mouseY,0,30);
-  text("PlayerControl: OFF",0,48);
-}
-
-void mousePressed(){
-  
-  if(exitButton.isPressed() && window == MAIN_MENU){
-    System.exit(0);
-  }
-  else if(playButton.isPressed() && window == MAIN_MENU){
-    window = SELECT_ROL_MENU;
-  }
-  else if(settingsButton.isPressed() && window == MAIN_MENU){
-    window = SETTINGS_MENU;
-  }
-  else if(backButton.isPressed() && (window == SELECT_ROL_MENU || window == SETTINGS_MENU)){
-    window = MAIN_MENU;
   }
 }
