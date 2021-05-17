@@ -104,29 +104,76 @@ void drawLevelMenu(){
   fill(WHITE);
   text("Select a Level",width/2,height/6);
   
-  textFont(fontButton);
   for(int i = 0; i < 10; i++) levelButton[i].drawButton();
+  backButton.drawButton();
+}
+
+/////////////////////////////// Waiting Room ////////////////////////////////////////
+// Here we wait for another player
+void drawWaitingRoom(){
+  background(BLACK);
+  starsBackground.draw();
+  if(debugInfo) debugInfo();
+  
+  rectMode(CENTER);
+  textAlign(CENTER);
+  
+  textFont(fontMenu);
+  fill(WHITE);
+  text("Waiting for a player",width/2,height/5);
+  textFont(fontDefault);
+  fill(YELLOW);
+  text("Your IP: "+myIPAddress,width/2,height/2+40);
+  
+  backButton.drawButton();
+}
+
+/////////////////////////////// Join Room ////////////////////////////////////////
+// Here we wait for another player
+void drawJoinRoom(){
+  background(BLACK);
+  starsBackground.draw();
+  if(debugInfo) debugInfo();
+  
+  rectMode(CENTER);
+  textAlign(CENTER);
+  
+  fill(WHITE);
+  textFont(fontMenu);
+  text("Type the Host IP",width/2,height/5);
+  
+  fill(GREEN);
+  textFont(fontDefault);
+  text("Host:"+remoteAddress,width/2,height/2+50);
+  
+  fill(WHITE);
+  textFont(fontDefault);
+  textSize(24);
+  text("Press ENTER to continue",width/2,height/3+40);
+  
   backButton.drawButton();
 }
 
 //////////////////// Keyboard interface /////////////////////////////////////////
 void keyPressed() {
-  if(window == LOGIN_MENU){
+  if(window == LOGIN_MENU || window == JOIN_ROOM){
     // Start with 'ENTER'
     if (key==ENTER && playerName.length() > 0) {
-      if(playerName.equals("GOD")){
+      if(playerName.equals("GOD") && window == LOGIN_MENU){
         localPlayer = new Player("GOD",9999,10,1);
         cheats = true;
       }
-      window = MAIN_MENU;
+      if(window == LOGIN_MENU) window = MAIN_MENU;
     }
     // Delete the last one character in the string
     else if(key==BACKSPACE){
-      if(playerName.length() > 0) playerName = playerName.substring(0, playerName.length()-1);
+      if(playerName.length() > 0 && window == LOGIN_MENU) playerName = playerName.substring(0, playerName.length()-1);
+      else if(remoteAddress.length() > 0 && window == JOIN_ROOM) remoteAddress = remoteAddress.substring(0, remoteAddress.length()-1);
     }
     // Allow only letters, numbers and a few symbols (32-125 ASCII).
     else if(key >= 32 && key <= 125){
-      if(playerName.length() < 16) playerName = playerName + key;
+      if(playerName.length() < 16 && window == LOGIN_MENU) playerName = playerName + key;
+      else if(remoteAddress.length() < 16 && window == JOIN_ROOM) remoteAddress += key;
     }
     if(keyCode == SHIFT){
       debugInfo = !debugInfo;
@@ -151,8 +198,9 @@ void mousePressed(){
   else if(settingsButton.isPressed() && window == MAIN_MENU){
     window = SETTINGS_MENU;
   }
-  else if(backButton.isPressed() && (window == SELECT_ROL_MENU || window == SETTINGS_MENU || window == LEVEL_MENU)){
+  else if(backButton.isPressed() && (window == SELECT_ROL_MENU || window == SETTINGS_MENU || window == LEVEL_MENU || window == WAITING_ROOM || window == JOIN_ROOM)){
     window = MAIN_MENU;
+    remoteAddress = "";
   }
   else if(changeButton.isPressed() && window == SETTINGS_MENU){
     window = LOGIN_MENU;
@@ -161,18 +209,24 @@ void mousePressed(){
   }
   else if((serverButton.isPressed() || singleButton.isPressed()) && window == SELECT_ROL_MENU){
     window = LEVEL_MENU;
+    isCooperativeMode = true;
   }
   else if(window == LEVEL_MENU){
     // Check for every level button
     for(int i = 0; i < 10; i++){
       if(levelButton[i].isPressed() && localPlayer != null){
-        window = STAGE;
-        stageLevel = (i+1);
+        if(isCooperativeMode) window = WAITING_ROOM;
+        else window = STAGE;
         starsBackground.setStarsSpeed(3.5);
+        stageLevel = (i+1);
         greetLevel = 0;
         break;
       }
     }
+  }
+  else if(joinButton.isPressed() && window == SELECT_ROL_MENU){
+    window = JOIN_ROOM;
+    isCooperativeMode = true;
   }
 }
 

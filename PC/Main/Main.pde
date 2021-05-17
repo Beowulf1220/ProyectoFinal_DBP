@@ -4,10 +4,21 @@
   Project: Space Odissey
 
   Requires to run it:
-  > downloading the sound library.
+  > Sound library.
+  > oscP5 library.
+  
+  Task remaining:
+  > add more enemies
+  > add the bosses
+  > add a few power up's
+  > add firebase conection
+  > add ardunio conection
+  > add android conection
 */
 
 import processing.sound.*;
+import oscP5.*;
+import netP5.*;
 
 PFont fontMenu,fontButton,fontInfo,fontDefault,fontSpecial,fontInterface;
 
@@ -18,6 +29,8 @@ public static final int SETTINGS_MENU = 2;
 public static final int SELECT_ROL_MENU = 3;
 public static final int LEVEL_MENU = 4;
 public static final int STAGE = 5;
+public static final int WAITING_ROOM = 6;
+public static final int JOIN_ROOM = 7;
 
 // A few constants
 final color GREEN = color(0,255,0);
@@ -78,13 +91,25 @@ PImage meteoriteGIF[];
 // Sounds
 SoundFile clickSound;
 
+// Conection Android
+OscP5 oscP5;
+String myIPAddress; // Your address
+String remoteAddress; // Your mate's address
+NetAddress remoteLocation;
+
 void setup(){
-  //Window
+  // Window
   surface.setTitle("Space Odissey - Powered by Godzilla");
   size(800,600);
   window = LOGIN_MENU;
   starsBackground = new StarsBackground();
   
+  // Conection
+  initNetworkConnection();
+  myIPAddress = NetInfo.lan();
+  remoteAddress = "";
+  
+  // Others
   debugInfo = false;
   cheats = false;
   isCooperativeMode = false;
@@ -110,7 +135,7 @@ void setup(){
   joinButton = new Button("Join",width/2-105,height/2+90,200,100,LIGHT_BLUE);
   
   backButton = new Button("Back to menu",width-200,height-60,380,100);
-  changeButton = new Button("Change profile",200,height-60,380,100);
+  changeButton = new Button("Change user",200,height-60,380,100);
   
   // Levels' Buttons
   levelButton = new Button[10];
@@ -166,8 +191,20 @@ void draw(){
      case STAGE:
        drawStage(stageLevel);
        break;
+     case WAITING_ROOM:
+       drawWaitingRoom();
+       break;
+     case JOIN_ROOM:
+       drawJoinRoom();
+       break;
      default:
        text("Error: window not found!",width/2,height/2);
        break;
   }
+}
+
+void initNetworkConnection()
+{
+  oscP5 = new OscP5(this, 12000);
+  remoteLocation = new NetAddress(remoteAddress, 12001);
 }

@@ -39,6 +39,7 @@ public class Button{
     
     // Button's text
     fill(col);
+    textFont(fontButton);
     text(text,positionX,positionY+16);
   }
   
