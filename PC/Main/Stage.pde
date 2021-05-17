@@ -6,6 +6,7 @@ void drawStage(int level){
   if(debugInfo) debugInfo();
   
   // Draw
+  localPlayer.move(localX,localY);
   localPlayer.drawPlayer();
   
   drawEnemies();

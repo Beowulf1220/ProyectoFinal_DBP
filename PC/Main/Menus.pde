@@ -184,8 +184,10 @@ void keyPressed() {
     if (key == ENTER) {
       if(playerName.length() > 0 && window == LOGIN_MENU){
         if(playerName.equals("GOD") && window == LOGIN_MENU){
-          localPlayer = new Player("GOD",9999,10,1);
+          localPlayer = new Player(playerName,9999,10,1);
           cheats = true;
+        }else{
+          localPlayer = new Player(playerName,0,1,1);
         }
         window = JOIN_PHONE;
         clickSound.play();
@@ -195,9 +197,11 @@ void keyPressed() {
       }
       else if(phoneAddress.length() > 0 && window == JOIN_PHONE){
         
-        // ...
+        OscMessage myMessage = new OscMessage("/conection");
+        myMessage.add(myIPAddress);
+        oscP5.send(myMessage, new NetAddress(phoneAddress, 12000));
+        //println("Enviado");
         
-        window = MAIN_MENU;
         clickSound.play();
       }
     }
@@ -278,7 +282,7 @@ void debugInfo(){
   fill(YELLOW);
   text("FPS: "+(int)frameRate,0,12);
   text("Mouse: "+mouseX+","+mouseY,0,24);
-  text("PlayerControl: OFF",0,36);
+  text("PlayerControl: "+(isPhoneConected ? "ON" : "OFF"),0,36);
   text("Cheats: "+(cheats ? "ON" : "OFF"),0,48);
   text("local IP: "+myIPAddress,0,60);
   text("Phone's IP: "+phoneAddress,0,72);

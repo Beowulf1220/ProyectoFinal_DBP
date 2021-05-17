@@ -53,25 +53,37 @@ public class Player{
     this.score = score;
   }
   
+  void setPlayerNumber(int playerNumber){
+    this.playerNumber = playerNumber;
+  }
+  
   // Get methods
-  String getName(){
+  public String getName(){
     return name;
   }
   
-  int getHealth(){
+  public int getHealth(){
     return health;
   }
   
-  int getShield(){
+  public int getShield(){
     return shield;
   }
   
-  int getScore(){
+  public int getScore(){
     return score;
   }
   
-  int getPlayerNumber(){
+  public int getPlayerNumber(){
     return playerNumber;
+  }
+  
+  public float getX(){
+    return x;
+  }
+  
+  public float getY(){
+    return y;
   }
   
   // Intersting methods
@@ -79,6 +91,15 @@ public class Player{
     image(avatar[avatarFrame], x, y);
     avatarFrame++;
     if(avatarFrame >= 2) avatarFrame = 0;
+  }
+  
+  // Move spaceShip
+  void move(float x, float y){
+    if(x > 0 && this.x < width) this.x += x;
+    if(x < 0 && this.x > 0) this.x += x;
+    //if(y > 0 && this.y < height) this.y += y;
+    //if(y < 0 && this.y > 0) this.y += y;
+    this.y += y;
   }
 }
 

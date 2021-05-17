@@ -2,16 +2,18 @@ import netP5.*;                                           // 1
 import oscP5.*;
 import ketai.net.*;
 import ketai.sensors.*;
+import android.os.Bundle;
+import android.view.WindowManager;
 OscP5 oscP5;
 KetaiSensor sensor;
 NetAddress remoteLocation;
 //Variables de conexión y acelerómetro
 float myAccelerometerX, myAccelerometerY, myAccelerometerZ;
-String x,y,p,myIPAddress,remoteAddress = "192.168.1.83";
+String x,y,p,myIPAddress,remoteAddress;
 //Variables para el juego
 String misil="Misil",ready="Ready",notReady="Not Ready",laser="Laser",titulo="The Space Odyssey";
 float anchoMisil,anchoReady,anchoNotReady,anchoLaser,anchoIP,anchoTitulo,xEstrellas[]=new float[200],yEstrellas[]=new float[200];
-boolean disparoLaser,disparoMisil,listo;
+boolean disparoLaser,disparoMisil,listo,conectado;
 void setup() {
   orientation(LANDSCAPE);
   textSize(72);
@@ -22,12 +24,14 @@ void setup() {
    xEstrellas[i]=random(width);
    yEstrellas[i]=random(height);
   }
+  remoteAddress = null;
   anchoTitulo=textWidth(titulo);
   anchoLaser=textWidth(laser);
   anchoReady=textWidth(ready);
   anchoNotReady=textWidth(notReady);
   anchoMisil=textWidth(misil);
   anchoIP=textWidth(myIPAddress);
+  conectado = false;
 }
 void draw() {
   background(0);
@@ -75,14 +79,30 @@ void draw() {
   text(misil,((3.25*width)/18)-(anchoMisil/2),(height/2)+18);
   text(laser,((15.25*width)/18)-(anchoLaser/2),(height/2)+18);
   text(titulo,width/2-(anchoTitulo)/2,(height/12)+18);
-  text(myIPAddress,width/2-(anchoIP)/2,(11*height/12)-18);
+  textAlign(CENTER);
+  text(myIPAddress+"  Conected: "+conectado,width/2,height-20);
+  textAlign(0);
   //Envio de datos
-  OscMessage myMessage = new OscMessage("botonesApp");
-  myMessage.add(disparoMisil);
-  myMessage.add(listo);
-  myMessage.add(disparoLaser);
-  myMessage.add(myAccelerometerY);
-  oscP5.send(myMessage, remoteLocation);
+  if(conectado){
+    OscMessage myMessage = new OscMessage("botonesApp");
+    // 1st value
+    if(disparoMisil) myMessage.add("true");
+    else myMessage.add("false");
+    // 2nd value
+    if(listo) myMessage.add("true");
+    else myMessage.add("false");
+    // 3th value
+    if(disparoLaser) myMessage.add("true");
+    else myMessage.add("false");
+    // 4th value
+    myMessage.add(myAccelerometerX);
+    // 5th value
+    myMessage.add(myAccelerometerY);
+    // 6th value
+    myMessage.add(myAccelerometerZ);
+    
+    oscP5.send(myMessage, remoteLocation);
+  }
 }
 void mousePressed(){
   //Boton de listo
@@ -108,6 +128,28 @@ void onAccelerometerEvent(float x, float y, float z)
 void initNetworkConnection()
 {
   oscP5 = new OscP5(this, 12000);
-  remoteLocation = new NetAddress(remoteAddress, 12001);
   myIPAddress = KetaiNet.getIP();
+}
+
+void oscEvent(OscMessage theOscMessage) {
+  if (theOscMessage.checkAddrPattern("/conection"))
+  {
+    conectado = true;
+    remoteAddress = theOscMessage.get(0).stringValue(); // PC address is catched here
+    remoteLocation = new NetAddress(remoteAddress, 12000);
+    //println(remoteAddress);
+    
+    OscMessage message = new OscMessage("/conection"); // Confirm the conection
+    //println(1);
+    message.add("true");
+    //println(2);
+    oscP5.send(message, remoteLocation);
+    //println(3);
+  }
+}
+
+//Keep screen awake
+void onCreate(Bundle bundle){
+  super.onCreate(bundle);
+  getActivity().getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 }

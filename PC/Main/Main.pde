@@ -72,6 +72,9 @@ StarsBackground starsBackground;
 // Local Player
 Player localPlayer;
 String playerName;
+float localX;
+float localY;
+
 
 // Another player
 Player otherPlayer;
@@ -99,6 +102,8 @@ String remoteAddress; // Your mate's address
 String phoneAddress; // phone address (control)
 NetAddress remoteLocation;
 
+boolean isPhoneConected;
+
 void setup(){
   // Window
   surface.setTitle("Space Odissey - Powered by Godzilla");
@@ -107,9 +112,12 @@ void setup(){
   starsBackground = new StarsBackground();
   
   // Conection
+  oscP5 = new OscP5(this, 12000, OscP5.UDP);
   myIPAddress = NetInfo.lan();
   remoteAddress = "";
   phoneAddress = "";
+  
+  isPhoneConected = false;
   
   // Others
   debugInfo = false;
@@ -208,12 +216,21 @@ void draw(){
   }
 }
 
+// OscP5 conection for Androind and Cooperative mode
 void oscEvent(OscMessage theOscMessage) {
-  /*if (theOscMessage.checkTypetag("fff"))                  // 6
+  //println("Resivido");
+  if (theOscMessage.checkAddrPattern("/conection")) // Confirm phone conection
   {
-     =  theOscMessage.get(0).floatValue();  // 7
-    accelerometerY =  theOscMessage.get(1).floatValue();
-    accelerometerZ =  theOscMessage.get(2).floatValue();
+    if(theOscMessage.get(0).stringValue().equals("true")) isPhoneConected = true;
+    window = MAIN_MENU;
   }
-  */
+  else if(theOscMessage.checkAddrPattern("botonesApp")) // Android sensors
+  {
+    //if(theOscMessage.get(0).stringValue().equals("true"))
+    //if(theOscMessage.get(1).stringValue().equals("true"))
+    //if(theOscMessage.get(2).stringValue().equals("true"))
+    localX = theOscMessage.get(4).floatValue()*0.3; // Y sensor
+    localY = theOscMessage.get(3).floatValue()*0.3; // Z sensor
+    println(localX+","+localY);
+  }
 }
