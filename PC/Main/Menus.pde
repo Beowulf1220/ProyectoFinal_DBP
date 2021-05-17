@@ -169,6 +169,7 @@ void mousePressed(){
         window = STAGE;
         stageLevel = (i+1);
         starsBackground.setStarsSpeed(3.5);
+        greetLevel = 0;
         break;
       }
     }

@@ -1,3 +1,5 @@
+// Background
+
 public class StarsBackground{
   
   // Stars matrix

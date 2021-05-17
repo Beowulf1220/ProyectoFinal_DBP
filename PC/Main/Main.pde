@@ -1,3 +1,12 @@
+// Main
+
+/*
+  Project: Space Odissey
+
+  Requires to run it:
+  > downloading the sound library.
+*/
+
 import processing.sound.*;
 
 PFont fontMenu,fontButton,fontInfo,fontDefault,fontSpecial,fontInterface;
@@ -41,6 +50,7 @@ Button changeButton;
 
 // Levels' Buttons
 Button levelButton[];
+int greetLevel;
 
 // Background stars
 StarsBackground starsBackground;
