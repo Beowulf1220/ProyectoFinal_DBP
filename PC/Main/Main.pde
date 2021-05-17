@@ -13,7 +13,6 @@
   > add a few power up's
   > add firebase conection
   > add ardunio conection
-  > add android conection
 */
 
 import processing.sound.*;
@@ -46,6 +45,7 @@ int window;
 
 // Level variable
 int stageLevel;
+boolean pause;
 
 // Debug Information
 boolean debugInfo;
@@ -110,6 +110,7 @@ void setup(){
   size(800,600);
   window = LOGIN_MENU;
   starsBackground = new StarsBackground();
+  pause = false;
   
   // Conection
   oscP5 = new OscP5(this, 12000, OscP5.UDP);
@@ -218,19 +219,19 @@ void draw(){
 
 // OscP5 conection for Androind and Cooperative mode
 void oscEvent(OscMessage theOscMessage) {
-  //println("Resivido");
-  if (theOscMessage.checkAddrPattern("/conection")) // Confirm phone conection
+  if (theOscMessage.checkAddrPattern("sensores")) // Confirm phone conection
   {
+    println("Resivido");
     if(theOscMessage.get(0).stringValue().equals("true")) isPhoneConected = true;
-    window = MAIN_MENU;
-  }
-  else if(theOscMessage.checkAddrPattern("botonesApp")) // Android sensors
-  {
-    //if(theOscMessage.get(0).stringValue().equals("true"))
     //if(theOscMessage.get(1).stringValue().equals("true"))
-    //if(theOscMessage.get(2).stringValue().equals("true"))
-    localX = theOscMessage.get(4).floatValue()*0.3; // Y sensor
-    localY = theOscMessage.get(3).floatValue()*0.3; // Z sensor
-    println(localX+","+localY);
+    if(theOscMessage.get(2).stringValue().equals("true")){
+      if(window == STAGE) pause = true;
+    }else{
+      pause = false;
+    }
+    //if(theOscMessage.get(3).stringValue().equals("true"))
+    localX = theOscMessage.get(5).floatValue(); // Y sensor
+    localY = theOscMessage.get(4).floatValue()*0.3; // X sensor
+    println(pause+" > "+theOscMessage.get(2).stringValue());
   }
 }

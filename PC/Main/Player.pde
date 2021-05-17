@@ -97,9 +97,18 @@ public class Player{
   void move(float x, float y){
     if(x > 0 && this.x < width) this.x += x;
     if(x < 0 && this.x > 0) this.x += x;
-    //if(y > 0 && this.y < height) this.y += y;
-    //if(y < 0 && this.y > 0) this.y += y;
-    this.y += y;
+    if(y > 0 && this.y < height) this.y += y;
+    if(y < 0 && this.y > 0) this.y += y;
+  }
+  
+  // Collision
+  void checkCollision(){
+    
+    for(int i = 0; i < MAX_METEORITES; i++){ // Meteorites collision
+      if(meteorites[i].isAlive()){
+        if(sqrt(pow(x-meteorites[i].getX(),2)*pow(y-meteorites[i].getY(),2)) <= 32+meteorites[i].getSize()) health -= 5;
+      }
+    }
   }
 }
 

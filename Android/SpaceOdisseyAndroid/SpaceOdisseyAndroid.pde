@@ -34,6 +34,10 @@ void setup() {
   conectado = false;
 }
 void draw() {
+  if(conectado){
+    //println(conectado);
+    sendData();
+  }
   background(0);
   for(int i=0;i<200;i++){
    fill(255);
@@ -83,26 +87,6 @@ void draw() {
   text(myIPAddress+"  Conected: "+conectado,width/2,height-20);
   textAlign(0);
   //Envio de datos
-  if(conectado){
-    OscMessage myMessage = new OscMessage("botonesApp");
-    // 1st value
-    if(disparoMisil) myMessage.add("true");
-    else myMessage.add("false");
-    // 2nd value
-    if(listo) myMessage.add("true");
-    else myMessage.add("false");
-    // 3th value
-    if(disparoLaser) myMessage.add("true");
-    else myMessage.add("false");
-    // 4th value
-    myMessage.add(myAccelerometerX);
-    // 5th value
-    myMessage.add(myAccelerometerY);
-    // 6th value
-    myMessage.add(myAccelerometerZ);
-    
-    oscP5.send(myMessage, remoteLocation);
-  }
 }
 void mousePressed(){
   //Boton de listo
@@ -134,18 +118,35 @@ void initNetworkConnection()
 void oscEvent(OscMessage theOscMessage) {
   if (theOscMessage.checkAddrPattern("/conection"))
   {
-    conectado = true;
     remoteAddress = theOscMessage.get(0).stringValue(); // PC address is catched here
     remoteLocation = new NetAddress(remoteAddress, 12000);
-    //println(remoteAddress);
-    
-    OscMessage message = new OscMessage("/conection"); // Confirm the conection
-    //println(1);
-    message.add("true");
-    //println(2);
-    oscP5.send(message, remoteLocation);
-    //println(3);
+    conectado = true;
+    //println(remoteLocation);
   }
+}
+
+void sendData(){
+    OscMessage myMessage = new OscMessage("sensores"); // Confirm the conection
+    // 0 value
+    myMessage.add("true");
+    // 1st value
+    if(disparoMisil) myMessage.add("true");
+    else myMessage.add("false");
+    // 2nd value
+    if(listo) myMessage.add("true");
+    else myMessage.add("false");
+    // 3th value
+    if(disparoLaser) myMessage.add("true");
+    else myMessage.add("false");
+    // 4th value
+    myMessage.add(myAccelerometerX);
+    // 5th value
+    myMessage.add(myAccelerometerY);
+    // 6th value
+    myMessage.add(myAccelerometerZ);
+    
+    oscP5.send(myMessage, remoteLocation);
+    //println("Sending data to PC: "+remoteLocation);
 }
 
 //Keep screen awake

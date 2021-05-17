@@ -43,6 +43,9 @@ void drawJoinPhone(){
   textFont(fontDefault);
   textSize(24);
   text("Press ENTER to continue",width/2,height-24);
+  
+  if(phoneAddress.length() > 8) phoneConection();
+  if(isPhoneConected) window = MAIN_MENU;
 }
 
 ///////////////////////////////////// MainMenu ///////////////////////////////////
@@ -195,13 +198,7 @@ void keyPressed() {
       else if(remoteAddress.length() > 0 && window == JOIN_ROOM){
         // ...
       }
-      else if(phoneAddress.length() > 0 && window == JOIN_PHONE){
-        
-        OscMessage myMessage = new OscMessage("/conection");
-        myMessage.add(myIPAddress);
-        oscP5.send(myMessage, new NetAddress(phoneAddress, 12000));
-        //println("Enviado");
-        
+      else if(phoneAddress.length() > 0 && window == JOIN_PHONE){ // This wouldn't must to use, if phoneConection works.
         clickSound.play();
       }
     }
@@ -220,11 +217,37 @@ void keyPressed() {
     if(keyCode == SHIFT){
       debugInfo = !debugInfo;
     }
-  }else{
-    if(keyCode == SHIFT){
-      debugInfo = !debugInfo;
-    }
-  }  
+  }else if(keyCode == SHIFT){
+    debugInfo = !debugInfo;
+  }else if(key == 'p'){
+    pause = !pause;
+  }
+}
+
+////////////////////////////// Phone conection ////////////////////////////////////////////
+void phoneConection(){
+  //println("Enviado");
+  OscMessage myMessage = new OscMessage("/conection");
+  myMessage.add(myIPAddress);
+  oscP5.send(myMessage, new NetAddress(phoneAddress, 12000));
+}
+
+//////////////////////////// Pause Menu /////////////////////////////////////////////////
+void pauseMenu(){
+  background(BLACK);
+  starsBackground.draw();
+  if(debugInfo) debugInfo();
+  
+  rectMode(CENTER);
+  textAlign(CENTER);
+  
+  textFont(fontSpecial);
+  fill(WHITE,200);
+  textSize(64);
+  text("Pause",width/2,height/2);
+  
+  textFont(fontButton);
+  backButton.drawButton();
 }
 
 /////////////////////////// Mouse pressed ( Buttons ) //////////////////////////////////////////////
@@ -239,9 +262,10 @@ void mousePressed(){
   else if(settingsButton.isPressed() && window == MAIN_MENU){
     window = SETTINGS_MENU;
   }
-  else if(backButton.isPressed() && (window == SELECT_ROL_MENU || window == SETTINGS_MENU || window == LEVEL_MENU || window == WAITING_ROOM || window == JOIN_ROOM)){
+  else if(backButton.isPressed() && (window == SELECT_ROL_MENU || window == SETTINGS_MENU || window == LEVEL_MENU || window == WAITING_ROOM || window == JOIN_ROOM || pause)){
     window = MAIN_MENU;
     remoteAddress = "";
+    pause = false;
   }
   else if(changeButton.isPressed() && window == SETTINGS_MENU){
     window = LOGIN_MENU;
