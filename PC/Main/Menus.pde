@@ -21,6 +21,30 @@ void drawLoginMenu(){
   text("Press ENTER to continue",width/2,height-24);
 }
 
+/////////////////////////////// Join Phone ////////////////////////////////////////
+// Here we conect our phone
+void drawJoinPhone(){
+  background(BLACK);
+  starsBackground.draw();
+  if(debugInfo) debugInfo();
+  
+  rectMode(CENTER);
+  textAlign(CENTER);
+  
+  fill(WHITE);
+  textFont(fontMenu);
+  text("Type your phone's IP",width/2,height/5);
+  
+  fill(GREEN);
+  textFont(fontDefault);
+  text("IP:"+phoneAddress,width/2,height/2+50);
+  
+  fill(WHITE);
+  textFont(fontDefault);
+  textSize(24);
+  text("Press ENTER to continue",width/2,height-24);
+}
+
 ///////////////////////////////////// MainMenu ///////////////////////////////////
 void drawMainMenu(){
   background(0);
@@ -156,28 +180,41 @@ void drawJoinRoom(){
 
 //////////////////// Keyboard interface /////////////////////////////////////////
 void keyPressed() {
-  if(window == LOGIN_MENU || window == JOIN_ROOM){
-    // Start with 'ENTER'
-    if (key==ENTER && playerName.length() > 0) {
-      if(playerName.equals("GOD") && window == LOGIN_MENU){
-        localPlayer = new Player("GOD",9999,10,1);
-        cheats = true;
+  if(window == LOGIN_MENU || window == JOIN_ROOM || window == JOIN_PHONE){ // Starts with 'ENTER'
+    if (key == ENTER) {
+      if(playerName.length() > 0 && window == LOGIN_MENU){
+        if(playerName.equals("GOD") && window == LOGIN_MENU){
+          localPlayer = new Player("GOD",9999,10,1);
+          cheats = true;
+        }
+        window = JOIN_PHONE;
+        clickSound.play();
       }
-      if(window == LOGIN_MENU) window = MAIN_MENU;
+      else if(remoteAddress.length() > 0 && window == JOIN_ROOM){
+        // ...
+      }
+      else if(phoneAddress.length() > 0 && window == JOIN_PHONE){
+        
+        // ...
+        
+        window = MAIN_MENU;
+        clickSound.play();
+      }
     }
     // Delete the last one character in the string
     else if(key==BACKSPACE){
       if(playerName.length() > 0 && window == LOGIN_MENU) playerName = playerName.substring(0, playerName.length()-1);
       else if(remoteAddress.length() > 0 && window == JOIN_ROOM) remoteAddress = remoteAddress.substring(0, remoteAddress.length()-1);
+      else if(phoneAddress.length() > 0 && window == JOIN_PHONE) phoneAddress = phoneAddress.substring(0, phoneAddress.length()-1);
     }
     // Allow only letters, numbers and a few symbols (32-125 ASCII).
     else if(key >= 32 && key <= 125){
       if(playerName.length() < 16 && window == LOGIN_MENU) playerName = playerName + key;
       else if(remoteAddress.length() < 16 && window == JOIN_ROOM) remoteAddress += key;
+      else if(phoneAddress.length() < 16 && window == JOIN_PHONE) phoneAddress += key;
     }
     if(keyCode == SHIFT){
       debugInfo = !debugInfo;
-      println(debugInfo);
     }
   }else{
     if(keyCode == SHIFT){
@@ -207,9 +244,13 @@ void mousePressed(){
     playerName = "";
     localPlayer = null;
   }
-  else if((serverButton.isPressed() || singleButton.isPressed()) && window == SELECT_ROL_MENU){
+  else if(serverButton.isPressed() && window == SELECT_ROL_MENU){
     window = LEVEL_MENU;
     isCooperativeMode = true;
+  }
+  else if(singleButton.isPressed() && window == SELECT_ROL_MENU){
+    window = LEVEL_MENU;
+    isCooperativeMode = false;
   }
   else if(window == LEVEL_MENU){
     // Check for every level button
@@ -217,7 +258,7 @@ void mousePressed(){
       if(levelButton[i].isPressed() && localPlayer != null){
         if(isCooperativeMode) window = WAITING_ROOM;
         else window = STAGE;
-        starsBackground.setStarsSpeed(3.5);
+        starsBackground.setStarsSpeed(6.5);
         stageLevel = (i+1);
         greetLevel = 0;
         break;
@@ -239,4 +280,6 @@ void debugInfo(){
   text("Mouse: "+mouseX+","+mouseY,0,24);
   text("PlayerControl: OFF",0,36);
   text("Cheats: "+(cheats ? "ON" : "OFF"),0,48);
+  text("local IP: "+myIPAddress,0,60);
+  text("Phone's IP: "+phoneAddress,0,72);
 }

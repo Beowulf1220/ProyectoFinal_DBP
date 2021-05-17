@@ -31,6 +31,7 @@ public static final int LEVEL_MENU = 4;
 public static final int STAGE = 5;
 public static final int WAITING_ROOM = 6;
 public static final int JOIN_ROOM = 7;
+public static final int JOIN_PHONE = 8;
 
 // A few constants
 final color GREEN = color(0,255,0);
@@ -91,10 +92,11 @@ PImage meteoriteGIF[];
 // Sounds
 SoundFile clickSound;
 
-// Conection Android
+// Conection PC and Android
 OscP5 oscP5;
 String myIPAddress; // Your address
 String remoteAddress; // Your mate's address
+String phoneAddress; // phone address (control)
 NetAddress remoteLocation;
 
 void setup(){
@@ -105,9 +107,9 @@ void setup(){
   starsBackground = new StarsBackground();
   
   // Conection
-  initNetworkConnection();
   myIPAddress = NetInfo.lan();
   remoteAddress = "";
+  phoneAddress = "";
   
   // Others
   debugInfo = false;
@@ -197,14 +199,21 @@ void draw(){
      case JOIN_ROOM:
        drawJoinRoom();
        break;
+     case JOIN_PHONE:
+       drawJoinPhone();
+       break;
      default:
        text("Error: window not found!",width/2,height/2);
        break;
   }
 }
 
-void initNetworkConnection()
-{
-  oscP5 = new OscP5(this, 12000);
-  remoteLocation = new NetAddress(remoteAddress, 12001);
+void oscEvent(OscMessage theOscMessage) {
+  /*if (theOscMessage.checkTypetag("fff"))                  // 6
+  {
+     =  theOscMessage.get(0).floatValue();  // 7
+    accelerometerY =  theOscMessage.get(1).floatValue();
+    accelerometerZ =  theOscMessage.get(2).floatValue();
+  }
+  */
 }

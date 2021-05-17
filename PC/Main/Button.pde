@@ -59,7 +59,6 @@ public class Button{
   
   //check if the button is pressed
   boolean isPressed(){
-    println("positonX: "+positionX+"\nMouseX: "+mouseX);
     boolean isPressed = false;
     if((mouseX >= positionX-(sizeX/2) && mouseX <= positionX+(sizeX/2)) && (mouseY >= positionY-(sizeY/2) && mouseY <= positionY+(sizeY/2))){
       isPressed = true;
