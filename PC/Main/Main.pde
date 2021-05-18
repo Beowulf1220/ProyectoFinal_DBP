@@ -96,6 +96,8 @@ PImage meteoriteGIF[];
 
 PImage explotionGIF[];
 
+PImage moonImage;
+
 // Sounds
 SoundFile clickSound;
 SoundFile hitSound1;
@@ -194,6 +196,9 @@ void setup(){
   
   explotionGIF = new PImage[8];
   for(int i = 0; i < 8; i++) explotionGIF[i] = loadImage("Resources/Images/effects/explotion/frame-0"+(i+1)+".gif");
+  
+  //moonImage = new PImage();
+  moonImage = loadImage("Resources/Images/enviroment/moon.png");
 }
 
 //Draw
@@ -237,6 +242,7 @@ void draw(){
 
 // OscP5 conection for Androind and Cooperative mode
 void oscEvent(OscMessage theOscMessage) {
+  println("Resivido");
   if (theOscMessage.checkAddrPattern("sensores")) // Confirm phone conection
   {
     //println("Resivido");

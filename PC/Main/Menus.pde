@@ -199,6 +199,7 @@ void keyPressed() {
         // ...
       }
       else if(phoneAddress.length() > 0 && window == JOIN_PHONE){ // This wouldn't must to use, if phoneConection works.
+        phoneConection();
         clickSound.play();
       }
     }

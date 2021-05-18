@@ -13,7 +13,7 @@ String x,y,p,myIPAddress,remoteAddress;
 //Variables para el juego
 String misil="Misil",ready="Ready",notReady="Not Ready",laser="Laser",titulo="The Space Odyssey";
 float anchoMisil,anchoReady,anchoNotReady,anchoLaser,anchoIP,anchoTitulo,xEstrellas[]=new float[200],yEstrellas[]=new float[200];
-boolean disparoLaser,disparoMisil,listo,conectado;
+boolean disparoLaser,disparoMisil,listo;
 void setup() {
   orientation(LANDSCAPE);
   textSize(72);
@@ -25,19 +25,15 @@ void setup() {
    yEstrellas[i]=random(height);
   }
   remoteAddress = null;
+  remoteLocation = null;
   anchoTitulo=textWidth(titulo);
   anchoLaser=textWidth(laser);
   anchoReady=textWidth(ready);
   anchoNotReady=textWidth(notReady);
   anchoMisil=textWidth(misil);
   anchoIP=textWidth(myIPAddress);
-  conectado = false;
 }
 void draw() {
-  if(conectado){
-    //println(conectado);
-    sendData();
-  }
   background(0);
   for(int i=0;i<200;i++){
    fill(255);
@@ -47,7 +43,6 @@ void draw() {
   if(disparoMisil){
   fill(53,103,255);
   rect(width/18,height/6,(4.5*width)/18,(4*height)/6,7);
-  delay(1000);
   disparoMisil = false;
   }else{
   fill(53,103,180);
@@ -69,7 +64,7 @@ void draw() {
   if(disparoLaser){
   fill(255,33,25);
   rect((13*width)/18,height/6,(4.5*width)/18,(4*height)/6,7);
-  delay(100);
+  //delay(100);
   disparoLaser = false;
   }else{
   fill(159,33,25);
@@ -84,9 +79,14 @@ void draw() {
   text(laser,((15.25*width)/18)-(anchoLaser/2),(height/2)+18);
   text(titulo,width/2-(anchoTitulo)/2,(height/12)+18);
   textAlign(CENTER);
-  text(myIPAddress+"  Conected: "+conectado,width/2,height-20);
+  text(myIPAddress+"  Conected: "+(remoteLocation != null ? "Ture :)" : "False :("),width/2,height-20);
   textAlign(0);
   //Envio de datos
+  println("> "+remoteLocation);
+  if(remoteLocation != null){
+    //println(conectado);
+    sendData();
+  }
 }
 void mousePressed(){
   //Boton de listo
@@ -119,9 +119,8 @@ void oscEvent(OscMessage theOscMessage) {
   if (theOscMessage.checkAddrPattern("/conection"))
   {
     remoteAddress = theOscMessage.get(0).stringValue(); // PC address is catched here
-    remoteLocation = new NetAddress(remoteAddress, 12000);
-    conectado = true;
-    //println(remoteLocation);
+    this.remoteLocation = new NetAddress(remoteAddress, 12000);
+    println(remoteLocation);
   }
 }
 

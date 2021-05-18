@@ -4,7 +4,12 @@ void drawStage(int level){
   if(!gameOver){
     if(!pause){
       background(BLACK);
-      starsBackground.draw();
+      
+      if(level == 1){
+        starsBackground.draw();
+        image(moonImage,width,height);
+      }
+      
       if(debugInfo) debugInfo();
       
       // Draw
