@@ -31,6 +31,7 @@ public static final int STAGE = 5;
 public static final int WAITING_ROOM = 6;
 public static final int JOIN_ROOM = 7;
 public static final int JOIN_PHONE = 8;
+public static final int GAME_OVER_SCREEN = 9;
 
 // A few constants
 final color GREEN = color(0,255,0);
@@ -42,6 +43,7 @@ final color WHITE = color(255);
 final color BLACK = color(0);
 
 int window;
+boolean gameOver;
 
 // Level variable
 int stageLevel;
@@ -92,8 +94,13 @@ PImage menuImg;
 //Images game
 PImage meteoriteGIF[];
 
+PImage explotionGIF[];
+
 // Sounds
 SoundFile clickSound;
+SoundFile hitSound1;
+SoundFile explotionSound;
+SoundFile laserSound;
 
 // Conection PC and Android
 OscP5 oscP5;
@@ -112,6 +119,8 @@ void setup(){
   starsBackground = new StarsBackground();
   pause = false;
   
+  gameOver = false;
+  
   // Conection
   oscP5 = new OscP5(this, 12000, OscP5.UDP);
   myIPAddress = NetInfo.lan();
@@ -127,6 +136,9 @@ void setup(){
   
   // Sounds
   clickSound = new SoundFile(this,"Resources/Sounds/click.wav",false);
+  hitSound1 = new SoundFile(this,"Resources/Sounds/hit.wav",false);
+  explotionSound = new SoundFile(this,"Resources/Sounds/explotion.wav",false);
+  laserSound = new SoundFile(this,"Resources/Sounds/laser.wav",false);
   
   //Text fonts
   fontMenu = createFont("Resources/Fonts/Roose Sally.otf",90);
@@ -179,6 +191,9 @@ void setup(){
   // Meteorite Images
   meteoriteGIF = new PImage[20];
   for(int i = 0; i < 20; i++) meteoriteGIF[i] = loadImage("Resources/Images/meteorite/frame-"+(i+1)+".gif");
+  
+  explotionGIF = new PImage[8];
+  for(int i = 0; i < 8; i++) explotionGIF[i] = loadImage("Resources/Images/effects/explotion/frame-0"+(i+1)+".gif");
 }
 
 //Draw
@@ -211,6 +226,9 @@ void draw(){
      case JOIN_PHONE:
        drawJoinPhone();
        break;
+     case GAME_OVER_SCREEN:
+       drawGameOverScreen();
+       break;
      default:
        text("Error: window not found!",width/2,height/2);
        break;
@@ -221,7 +239,7 @@ void draw(){
 void oscEvent(OscMessage theOscMessage) {
   if (theOscMessage.checkAddrPattern("sensores")) // Confirm phone conection
   {
-    println("Resivido");
+    //println("Resivido");
     if(theOscMessage.get(0).stringValue().equals("true")) isPhoneConected = true;
     //if(theOscMessage.get(1).stringValue().equals("true"))
     if(theOscMessage.get(2).stringValue().equals("true")){
@@ -230,8 +248,7 @@ void oscEvent(OscMessage theOscMessage) {
       pause = false;
     }
     //if(theOscMessage.get(3).stringValue().equals("true"))
-    localX = theOscMessage.get(5).floatValue(); // Y sensor
-    localY = theOscMessage.get(4).floatValue()*0.3; // X sensor
-    println(pause+" > "+theOscMessage.get(2).stringValue());
+    localX = theOscMessage.get(5).floatValue()*1.5; // Y sensor
+    localY = theOscMessage.get(4).floatValue()*1.5; // X sensor
   }
 }

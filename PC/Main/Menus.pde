@@ -250,6 +250,24 @@ void pauseMenu(){
   backButton.drawButton();
 }
 
+////////////////////////// Game over Screen //////////////////////////////////////////////////////
+void drawGameOverScreen(){
+  background(BLACK);
+  starsBackground.draw();
+  if(debugInfo) debugInfo();
+  
+  rectMode(CENTER);
+  textAlign(CENTER);
+  
+  textFont(fontSpecial);
+  fill(WHITE,220);
+  textSize(72);
+  text("Game Over",width/2,height/2);
+  
+  textFont(fontButton);
+  backButton.drawButton();
+}
+
 /////////////////////////// Mouse pressed ( Buttons ) //////////////////////////////////////////////
 void mousePressed(){
   clickSound.play();
@@ -262,10 +280,11 @@ void mousePressed(){
   else if(settingsButton.isPressed() && window == MAIN_MENU){
     window = SETTINGS_MENU;
   }
-  else if(backButton.isPressed() && (window == SELECT_ROL_MENU || window == SETTINGS_MENU || window == LEVEL_MENU || window == WAITING_ROOM || window == JOIN_ROOM || pause)){
+  else if(backButton.isPressed() && (window == SELECT_ROL_MENU || window == SETTINGS_MENU || window == LEVEL_MENU || window == WAITING_ROOM || window == JOIN_ROOM || pause || window == GAME_OVER_SCREEN)){
     window = MAIN_MENU;
     remoteAddress = "";
     pause = false;
+    gameOver = false;
   }
   else if(changeButton.isPressed() && window == SETTINGS_MENU){
     window = LOGIN_MENU;
@@ -297,6 +316,11 @@ void mousePressed(){
     window = JOIN_ROOM;
     isCooperativeMode = true;
   }
+}
+
+/////////////////////////// Mouse released ( Buttons ) //////////////////////////////////////////////
+void mouseReleased(){
+  
 }
 
 /////////////////////// Debug info ///////////////////////////////////

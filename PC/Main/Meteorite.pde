@@ -43,9 +43,9 @@ public class Meteorite{
   }
   
   void revive(){
+    size = (int) random(32,256);
     rotationSpeed = random(1,8);
     alive = true;
-    random(32,256);
     speed = random(1,10);
     x = random((size/2),(width-(size/2)));
     y = -(size/2);
@@ -66,5 +66,14 @@ public class Meteorite{
   
   public float getY(){
     return y;
+  }
+  
+  // Sets methods
+  public void setAlive(boolean alive){
+    this.alive = alive;
+  }
+  
+  public void setY(float y){
+    this.y = y;
   }
 }
