@@ -6,10 +6,11 @@ import android.os.Bundle;
 import android.view.WindowManager;
 OscP5 oscP5;
 KetaiSensor sensor;
-NetAddress remoteLocation;
+public static NetAddress remoteLocation;
 //Variables de conexión y acelerómetro
 float myAccelerometerX, myAccelerometerY, myAccelerometerZ;
-String x,y,p,myIPAddress,remoteAddress;
+String x,y,p,myIPAddress;
+public static String remoteAddress;
 //Variables para el juego
 String misil="Misil",ready="Ready",notReady="Not Ready",laser="Laser",titulo="The Space Odyssey";
 float anchoMisil,anchoReady,anchoNotReady,anchoLaser,anchoIP,anchoTitulo,xEstrellas[]=new float[200],yEstrellas[]=new float[200];
@@ -119,7 +120,7 @@ void oscEvent(OscMessage theOscMessage) {
   if (theOscMessage.checkAddrPattern("/conection"))
   {
     remoteAddress = theOscMessage.get(0).stringValue(); // PC address is catched here
-    this.remoteLocation = new NetAddress(remoteAddress, 12000);
+    remoteLocation = new NetAddress(remoteAddress, 12000);
     println(remoteLocation);
   }
 }
