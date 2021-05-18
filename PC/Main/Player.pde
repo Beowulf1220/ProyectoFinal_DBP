@@ -121,7 +121,6 @@ public class Player extends GameObject{
   void drawPlayer(){
     if(getHealth() > 0){  // alive
       move(localX,localY);
-      image(avatar[avatarFrame], x, y);
       avatarFrame++;
       if(avatarFrame >= 2) avatarFrame = 0;
       if(laser && shotDelay > 10){
@@ -135,7 +134,8 @@ public class Player extends GameObject{
       }else{
         if(shotDelay <= 10) shotDelay++;
       }
-      for(int i = 0; i < 10; i++) if(lasers[i].inScreen()) lasers[i].draw();
+      for(int i = 0; i < 10; i++) if(lasers[i].inScreen()) lasers[i].draw(); // draw lasers
+      image(avatar[avatarFrame], x, y);
     }
     else{ // dead
       image(explotionGIF[avatarFrame],x,y);
@@ -161,7 +161,8 @@ public class Player extends GameObject{
     if(y > 0 && this.y < height) this.y += y;
     if(y < 0 && this.y > 0) this.y += y;
     for(int i = 0; i < MAX_METEORITES; i++){
-      if(checkCollision(this,meteorites[i]) > 0) meteorites[i].setHealth(0);
+      checkCollision(this,meteorites[i]);
+      for(int j = 0; j < 10; j++) if(lasers[j].getHealth() > 0 && meteorites[i].getHealth() > 0) checkCollision(meteorites[i],lasers[j]); // check laser and metoerites collition
     }
     if(getHealth() <= 0){
       explotionSound.play();
@@ -169,7 +170,7 @@ public class Player extends GameObject{
   }
 }
 
-// Player interface
+////////////////////////// Player interface ///////////////////////////////////////
 void playerInerface(){
   textFont(fontInterface);
   textAlign(0);
@@ -187,41 +188,55 @@ void playerInerface(){
 }
 
 //////////////////////////////// Laser shots //////////////////////////////////////////
-public class Laser{
+public class Laser extends GameObject{
   
   private float x,y;
   private boolean inScreen;
   
   public Laser(){
+    super(0);
     inScreen = false;
   }
   public void restart(float x, float y){
     this.x = x;
     this.y = y;
     inScreen = true;
+    setHealth(1);
   }
   
   public void draw(){
     if(inScreen){
       fill(RED);
-      rect(x,y,6,50);
+      rect(x,y,6,40);
+      //ellipse(x,y,15,15);
       y -= 16;
-      if(y < -25) inScreen = false;
+      if(y < -25 || getHealth() <= 0){
+        inScreen = false;
+      }
     }
   }
   
   
   // Gets methods
+  public int getSize(){
+    return 15;
+  }
+  
   public float getX(){
     return x;
   }
   
+  @Override
   public float getY(){
     return y;
   }
   
   public boolean inScreen(){
     return inScreen;
+  }
+  
+  public int getDamage(){
+    return 5;
   }
 }
 
@@ -249,9 +264,10 @@ private int checkCollision(GameObject a, GameObject b){
   }
   
   if(distancia <= (objectARatio + objectBRatio)){
-    damage = b.getDamage();
     hitSound1.play();
-    a.setHealth(a.getHealth()-damage);
+    a.setHealth(a.getHealth()-b.getDamage());
+    b.setHealth(b.getHealth()-a.getDamage());
+    //println("> ("+a.toString()+") crashed with ("+b.toString()+")");
   }
   return damage;
 }
