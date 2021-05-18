@@ -48,6 +48,7 @@ boolean gameOver;
 // Level variable
 int stageLevel;
 boolean pause;
+int levelCounter;
 
 // Debug Information
 boolean debugInfo;
@@ -74,10 +75,9 @@ StarsBackground starsBackground;
 // Local Player
 Player localPlayer;
 String playerName;
-float localX;
-float localY;
-
-
+static float localX;
+static float localY;
+static boolean laser;
 // Another player
 Player otherPlayer;
 
@@ -93,6 +93,7 @@ PImage menuImg;
 
 //Images game
 PImage meteoriteGIF[];
+PImage meduGIF[];
 
 PImage explotionGIF[];
 
@@ -121,6 +122,7 @@ void setup(){
   starsBackground = new StarsBackground();
   pause = false;
   
+  levelCounter = 0;
   gameOver = false;
   
   // Conection
@@ -135,6 +137,7 @@ void setup(){
   debugInfo = false;
   cheats = false;
   isCooperativeMode = false;
+  laser = false;
   
   // Sounds
   clickSound = new SoundFile(this,"Resources/Sounds/click.wav",false);
@@ -197,6 +200,9 @@ void setup(){
   explotionGIF = new PImage[8];
   for(int i = 0; i < 8; i++) explotionGIF[i] = loadImage("Resources/Images/effects/explotion/frame-0"+(i+1)+".gif");
   
+  meduGIF = new PImage[10];
+  for(int i = 0; i < 10; i++) meduGIF[i] = loadImage("Resources/Images/Enemies/medu/frame-0"+(i+1)+".gif");
+  
   //moonImage = new PImage();
   moonImage = loadImage("Resources/Images/enviroment/moon.png");
 }
@@ -242,7 +248,7 @@ void draw(){
 
 // OscP5 conection for Androind and Cooperative mode
 void oscEvent(OscMessage theOscMessage) {
-  println("Resivido");
+  //println(esivido");
   if (theOscMessage.checkAddrPattern("sensores")) // Confirm phone conection
   {
     //println("Resivido");
@@ -253,8 +259,12 @@ void oscEvent(OscMessage theOscMessage) {
     }else{
       pause = false;
     }
-    //if(theOscMessage.get(3).stringValue().equals("true"))
-    localX = theOscMessage.get(5).floatValue()*1.5; // Y sensor
-    localY = theOscMessage.get(4).floatValue()*1.5; // X sensor
+    if(theOscMessage.get(3).stringValue().equals("true")){
+      laser = true;
+    }else{
+      laser = false;
+    }
+    localX = theOscMessage.get(5).floatValue()*1.6; // Y sensor
+    localY = theOscMessage.get(4).floatValue()*1.6; // X sensor
   }
 }

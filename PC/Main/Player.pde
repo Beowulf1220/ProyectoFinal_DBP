@@ -1,5 +1,5 @@
 // Player Class
-public class Player{
+public class Player extends GameObject{
   
   // Attributes
   private String name; // User name
@@ -17,17 +17,23 @@ public class Player{
   
   // Health Points
   private int lifes;
-  private int health;
   private int shield;
+  
+  //shots
+  Laser lasers[];
+  int shotDelay;
   
   // Builder
   public Player(String name,int highestScore, int save, int playerNumber){
+    super(100);
     
     lifes = 3;
-    health = 100;
     shield = 0;
+    shotDelay = 0;
     
     avatar = new PImage[2];
+    lasers = new Laser[10];
+    for(int i = 0; i < 10; i++) lasers[i] = new Laser();
     
     if(playerNumber == 1){
       avatar[0] = loadImage("Resources/Images/spaceShips/goldenHeart/frame1.gif");
@@ -75,10 +81,6 @@ public class Player{
     return lifes;
   }
   
-  public int getHealth(){
-    return health;
-  }
-  
   public int getShield(){
     return shield;
   }
@@ -91,20 +93,49 @@ public class Player{
     return playerNumber;
   }
   
+  public int geHighestScore(){
+    return highestScore;
+  }
+  
+  @Override
   public float getX(){
     return x;
   }
   
+  @Override
   public float getY(){
     return y;
   }
   
+  @Override
+  public int getSize(){
+    return 64; // Spaceship size
+  }
+  
+  @Override
+  public int getDamage(){
+    return 5;
+  }
+  
   // Intersting methods
   void drawPlayer(){
-    if(health > 0){  // alive
+    if(getHealth() > 0){  // alive
+      move(localX,localY);
       image(avatar[avatarFrame], x, y);
       avatarFrame++;
       if(avatarFrame >= 2) avatarFrame = 0;
+      if(laser && shotDelay > 10){
+        shotDelay = 0;
+        for(int i = 0; i < 10; i++){
+          if(!lasers[i].inScreen()){
+            lasers[i].restart(x,y);
+            break;
+          }
+        }
+      }else{
+        if(shotDelay <= 10) shotDelay++;
+      }
+      for(int i = 0; i < 10; i++) if(lasers[i].inScreen()) lasers[i].draw();
     }
     else{ // dead
       image(explotionGIF[avatarFrame],x,y);
@@ -120,7 +151,7 @@ public class Player{
   
   void revive(){
     avatarFrame = 0;
-    health = 100;
+    setHealth(100);
   }
   
   // Move spaceShip
@@ -129,28 +160,12 @@ public class Player{
     if(x < 0 && this.x > 0) this.x += x;
     if(y > 0 && this.y < height) this.y += y;
     if(y < 0 && this.y > 0) this.y += y;
-    int damage = checkCollision();
-    health -= damage;
-    if(health <= 0){
-      health = 0;
+    for(int i = 0; i < MAX_METEORITES; i++){
+      if(checkCollision(this,meteorites[i]) > 0) meteorites[i].setHealth(0);
+    }
+    if(getHealth() <= 0){
       explotionSound.play();
     }
-  }
-  
-  // Collision
-  private int checkCollision(){
-    int damage = 0;
-    for(int i = 0; i < MAX_METEORITES; i++){ // Meteorites collision
-      if(meteorites[i].isAlive()){
-        double distancia = Math.sqrt( (x - meteorites[i].getX())*(x - meteorites[i].getX()) + (y - meteorites[i].getY())*(y - meteorites[i].getY()) ); // distance between player and meteorite "i"
-        if(distancia <= 16+(meteorites[i].getSize()/2)){ // is the ship collisioning?
-          damage = 50;
-          meteorites[i].setAlive(false);
-          hitSound1.play();
-        }
-      }
-    }
-    return damage;
   }
 }
 
@@ -164,8 +179,79 @@ void playerInerface(){
   "    Lifes:"+localPlayer.getLifes()+
   "    Health:"+localPlayer.getHealth()+
   "    Shield:"+localPlayer.getShield()+
-  "    Score:"+localPlayer.getScore(),0,12);
+  "    Score:"+localPlayer.getScore()+
+  "    Time remaining to arrvie:"+(180-levelCounter),0,12);
   if(isCooperativeMode){
     // another one player ...
   }
+}
+
+//////////////////////////////// Laser shots //////////////////////////////////////////
+public class Laser{
+  
+  private float x,y;
+  private boolean inScreen;
+  
+  public Laser(){
+    inScreen = false;
+  }
+  public void restart(float x, float y){
+    this.x = x;
+    this.y = y;
+    inScreen = true;
+  }
+  
+  public void draw(){
+    if(inScreen){
+      fill(RED);
+      rect(x,y,6,50);
+      y -= 16;
+      if(y < -25) inScreen = false;
+    }
+  }
+  
+  
+  // Gets methods
+  public float getX(){
+    return x;
+  }
+  
+  public float getY(){
+    return y;
+  }
+  
+  public boolean inScreen(){
+    return inScreen;
+  }
+}
+
+////////////////////////////////////////// Collitions ///////////////////////////////////////////////////////
+private int checkCollision(GameObject a, GameObject b){
+  
+  int damage = 0;
+  
+  float x1 = a.getX();
+  float y1 = a.getY();
+  float x2 = b.getX();
+  float y2 = b.getY();
+  
+  double objectARatio = (a.getSize()/2);
+  double objectBRatio = (b.getSize()/2);
+  
+  objectARatio -= objectARatio*0.1; // Offset
+  objectBRatio -= objectBRatio*0.1; // Offset
+  
+  double distancia = Math.sqrt((x2 - x1)*(x2 - x1) + (y2 - y1)*(y2 - y1));
+  
+  if(debugInfo){
+    ellipse(x1,y1,a.getSize(),a.getSize()); // Object A hitBox
+    ellipse(x2,y2,b.getSize(),b.getSize()); // Object B hitBox
+  }
+  
+  if(distancia <= (objectARatio + objectBRatio)){
+    damage = b.getDamage();
+    hitSound1.play();
+    a.setHealth(a.getHealth()-damage);
+  }
+  return damage;
 }

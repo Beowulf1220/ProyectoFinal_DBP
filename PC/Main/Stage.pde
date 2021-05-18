@@ -5,15 +5,15 @@ void drawStage(int level){
     if(!pause){
       background(BLACK);
       
+      if(frameCount%30 == 0 && levelCounter < 180) levelCounter++;
+      
       if(level == 1){
         starsBackground.draw();
-        image(moonImage,width,height);
       }
       
       if(debugInfo) debugInfo();
       
       // Draw
-      localPlayer.move(localX,localY);
       localPlayer.drawPlayer();
       
       drawEnemies();
@@ -39,7 +39,7 @@ void drawStage(int level){
 
 /////////////////////////// Draw Enemies /////////////////////////////////////
 void drawEnemies(){
-  if(frameCount%250 == 0){
+  if(frameCount%150 == 0){
     for(int i = 0; i < MAX_METEORITES; i++){
       if(!meteorites[i].isAlive()) meteorites[i].revive();
     }

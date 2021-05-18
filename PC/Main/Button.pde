@@ -33,9 +33,9 @@ public class Button{
   void drawButton(){
     // This draw a button with a border
     fill(col);
-    rect(positionX,positionY,sizeX,sizeY);
+    rect(positionX,positionY,sizeX,sizeY,5);
     fill(0);
-    rect(positionX,positionY,sizeX-4,sizeY-4);
+    rect(positionX,positionY,sizeX-4,sizeY-4,5);
     
     // Button's text
     fill(col);

@@ -65,11 +65,9 @@ void draw() {
   if(disparoLaser){
   fill(255,33,25);
   rect((13*width)/18,height/6,(4.5*width)/18,(4*height)/6,7);
-  //delay(100);
-  disparoLaser = false;
   }else{
   fill(159,33,25);
-  rect((13*width)/18,height/6,(4.5*width)/18,(4*height)/6,7);  
+  rect((13*width)/18,height/6,(4.5*width)/18,(4*height)/6,7);
   }
   //Fondo negro del titulo
   fill(0);
@@ -80,7 +78,7 @@ void draw() {
   text(laser,((15.25*width)/18)-(anchoLaser/2),(height/2)+18);
   text(titulo,width/2-(anchoTitulo)/2,(height/12)+18);
   textAlign(CENTER);
-  text(myIPAddress+"  Conected: "+(remoteLocation != null ? "Ture :)" : "False :("),width/2,height-20);
+  text(myIPAddress+"  Conected: "+(remoteLocation != null ? "True :)" : "False :("),width/2,height-20);
   textAlign(0);
   //Envio de datos
   println("> "+remoteLocation);
@@ -100,10 +98,15 @@ void mousePressed(){
   if (mouseX > width/18 && mouseX < width/18+(4.5*width)/18 && mouseY > height/6 && mouseY < height/6+(4*height)/6 && disparoMisil==false) {
     disparoMisil = true;
   }
-  if (mouseX > 13*width/18 && mouseX < 13*width/18+(4.5*width)/18 && mouseY > height/6 && mouseY < height/6+(4*height)/6 && disparoLaser==false) {
+  if (mouseX > 13*width/18 && mouseX < 13*width/18+(4.5*width)/18 && mouseY > height/6 && mouseY < height/6+(4*height)/6) {
     disparoLaser = true;
   }
 }
+
+void mouseReleased(){
+  disparoLaser = false;
+}
+
 void onAccelerometerEvent(float x, float y, float z)
 {
   myAccelerometerX = x;
@@ -121,7 +124,7 @@ void oscEvent(OscMessage theOscMessage) {
   {
     remoteAddress = theOscMessage.get(0).stringValue(); // PC address is catched here
     remoteLocation = new NetAddress(remoteAddress, 12000);
-    println(remoteLocation);
+    //println(remoteLocation);
   }
 }
 

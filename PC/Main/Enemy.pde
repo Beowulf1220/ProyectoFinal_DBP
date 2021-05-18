@@ -1,6 +1,8 @@
 // Enemy Class
 public class Enemy{
   
+  int health;
+  
   // Builder
   public Enemy(){
     // ...
@@ -8,5 +10,10 @@ public class Enemy{
   
   void drawEnemy(){
     // ...
+  }
+  
+  // Gets methods
+  public int getHealth(){
+    return health;
   }
 }

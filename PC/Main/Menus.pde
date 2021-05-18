@@ -286,6 +286,7 @@ void mousePressed(){
     remoteAddress = "";
     pause = false;
     gameOver = false;
+    levelCounter = 0;
   }
   else if(changeButton.isPressed() && window == SETTINGS_MENU){
     window = LOGIN_MENU;

@@ -1,6 +1,11 @@
 // Background
 
-public class StarsBackground{
+public abstract class Background{
+  
+  public abstract void draw();
+}
+
+public class StarsBackground extends Background{
   
   // Stars matrix
   private float stars[][];
@@ -70,6 +75,7 @@ public class StarsBackground{
     return col;
   }
   
+  @Override
   public void draw(){
     for(int i = 0; i < stars_number; i++){
       fill(starColor[i]);

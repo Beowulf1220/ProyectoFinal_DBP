@@ -1,6 +1,30 @@
 // Meteorite Class
 
-public class Meteorite{
+public abstract class GameObject{
+  
+  private int health;
+  
+  GameObject(int health){
+    this. health = health;
+  }
+  
+  public abstract float getX();
+  public abstract float getY();
+  public abstract int getSize();
+  public abstract int getDamage();
+  
+  // Get methods
+  public int getHealth(){
+    return health;
+  }
+  
+  // Set methods
+  public void setHealth(int health){
+    this.health = health;
+  }
+}
+
+public class Meteorite extends GameObject{
   
   // There's a only meteorite sprite so, we can change the size and speed to show variety
   
@@ -13,6 +37,7 @@ public class Meteorite{
   
   //Meteorite Builder
   public Meteorite(){
+    super(10); // Father builder
     rotationSpeed = random(1,8);
     alive = false;
     frame = 0;
@@ -23,6 +48,7 @@ public class Meteorite{
   }
   
   public Meteorite(int size, float speed){
+    super(10); // Father builder
     rotationSpeed = random(1,8);
     alive = false;
     frame = 0;
@@ -39,10 +65,18 @@ public class Meteorite{
     y += speed;
     if(frameCount%round(rotationSpeed) == 0) frame++;
     if(frame >= 20) frame = 0;
-    if(y > height+(size/2)) alive = false;
+    if(y > height+(size/2)){
+      alive = false;
+      y = -(size/2);
+    }
+    if(getHealth() <= 0){
+      alive = false;
+      y = -(size/2);
+    }
   }
   
   void revive(){
+    setHealth(5);
     size = (int) random(32,256);
     rotationSpeed = random(1,8);
     alive = true;
@@ -56,16 +90,24 @@ public class Meteorite{
     return alive;
   }
   
+  @Override
   public int getSize(){
     return size;
   }
   
+  @Override
   public float getX(){
     return x;
   }
   
+  @Override
   public float getY(){
     return y;
+  }
+  
+  @Override
+  public int getDamage(){
+    return 5;
   }
   
   // Sets methods
