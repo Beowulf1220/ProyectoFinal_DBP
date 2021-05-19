@@ -8,12 +8,9 @@ public class Player extends GameObject{
   private int save; // Game progress
   private int playerNumber;
   
-  // Positon
-  private float x,y;
-  
   // Player avatar
   private PImage avatar[];
-  private int avatarFrame;
+  private int avatarFrame; // For change the frame every "x" time
   
   // Health Points
   private int lifes;
@@ -32,17 +29,20 @@ public class Player extends GameObject{
     shotDelay = 0;
     
     avatar = new PImage[2];
-    lasers = new Laser[10];
-    for(int i = 0; i < 10; i++) lasers[i] = new Laser();
+    lasers = new Laser[MAX_AMMO];
+    for(int i = 0; i < MAX_AMMO; i++) lasers[i] = new Laser();
     
-    if(playerNumber == 1){
+    if(playerNumber == 1) // PLayer 1 sprite
+    {
       avatar[0] = loadImage("Resources/Images/spaceShips/goldenHeart/frame1.gif");
       avatar[1] = loadImage("Resources/Images/spaceShips/goldenHeart/frame2.gif");
-      x = 200;
-    }else{
+      setX(width/3);
+    }
+    else // PLayer 2 sprite
+    {
       avatar[0] = loadImage("Resources/Images/spaceShips/eagleRed/frame1.gif");
       avatar[1] = loadImage("Resources/Images/spaceShips/eagleRed/frame2.gif");
-      x = 400;
+      setX(2*width/3);
     }
     
     avatarFrame = 0;
@@ -51,15 +51,10 @@ public class Player extends GameObject{
     this.save = save;
     this.playerNumber = playerNumber;
     score = 0;
-    y = height - 100;
+    setY(height - 100);
   }
   
   // Set methods
-  void setPosition(float x, float y){
-    this.x = x;
-    this.y = y;
-  }
-  
   void setScore(int score){
     this.score = score;
   }
@@ -98,18 +93,8 @@ public class Player extends GameObject{
   }
   
   @Override
-  public float getX(){
-    return x;
-  }
-  
-  @Override
-  public float getY(){
-    return y;
-  }
-  
-  @Override
   public int getSize(){
-    return 64; // Spaceship size
+    return 54; // Spaceship size
   }
   
   @Override
@@ -125,8 +110,8 @@ public class Player extends GameObject{
       if(avatarFrame >= 2) avatarFrame = 0;
       if(laser && shotDelay > 10){
         shotDelay = 0;
-        for(int i = 0; i < 10; i++){
-          if(!lasers[i].inScreen()){
+        for(int i = 0; i < MAX_AMMO; i++){
+          if(lasers[i].getHealth() <= 0){
             lasers[i].restart(x,y);
             break;
           }
@@ -134,7 +119,7 @@ public class Player extends GameObject{
       }else{
         if(shotDelay <= 10) shotDelay++;
       }
-      for(int i = 0; i < 10; i++) if(lasers[i].inScreen()) lasers[i].draw(); // draw lasers
+      for(int i = 0; i < MAX_AMMO; i++) if(lasers[i].getHealth() > 0) lasers[i].draw(); // draw lasers
       image(avatar[avatarFrame], x, y);
     }
     else{ // dead
@@ -161,8 +146,8 @@ public class Player extends GameObject{
     if(y > 0 && this.y < height) this.y += y;
     if(y < 0 && this.y > 0) this.y += y;
     for(int i = 0; i < MAX_METEORITES; i++){
-      checkCollision(this,meteorites[i]);
-      for(int j = 0; j < 10; j++) if(lasers[j].getHealth() > 0 && meteorites[i].getHealth() > 0) checkCollision(meteorites[i],lasers[j]); // check laser and metoerites collition
+      checkCollision(this,meteorites[i]); // Check collitions player-meteorites
+      for(int j = 0; j < MAX_AMMO; j++) if(lasers[j].getHealth() > 0 && meteorites[i].getHealth() > 0) checkCollision(meteorites[i],lasers[j]); // check laser and metoerites collition
     }
     if(getHealth() <= 0){
       explotionSound.play();
@@ -180,8 +165,9 @@ void playerInerface(){
   "    Lifes:"+localPlayer.getLifes()+
   "    Health:"+localPlayer.getHealth()+
   "    Shield:"+localPlayer.getShield()+
-  "    Score:"+localPlayer.getScore()+
-  "    Time remaining to arrvie:"+(180-levelCounter),0,12);
+  "    Score:"+localPlayer.getScore(),0,12);
+  textAlign(RIGHT);
+  if(levelCounter >= 0) text("Time remaining to arrvie:"+levelCounter,width,12);
   if(isCooperativeMode){
     // another one player ...
   }
@@ -190,84 +176,33 @@ void playerInerface(){
 //////////////////////////////// Laser shots //////////////////////////////////////////
 public class Laser extends GameObject{
   
-  private float x,y;
-  private boolean inScreen;
-  
   public Laser(){
     super(0);
-    inScreen = false;
   }
   public void restart(float x, float y){
     this.x = x;
     this.y = y;
-    inScreen = true;
     setHealth(1);
   }
   
   public void draw(){
-    if(inScreen){
+    if(this.getHealth() > 0){
       fill(RED);
       rect(x,y,6,40);
       //ellipse(x,y,15,15);
       y -= 16;
-      if(y < -25 || getHealth() <= 0){
-        inScreen = false;
+      if(y < -5){
+        setHealth(0);
       }
     }
   }
   
-  
   // Gets methods
   public int getSize(){
-    return 15;
-  }
-  
-  public float getX(){
-    return x;
-  }
-  
-  @Override
-  public float getY(){
-    return y;
-  }
-  
-  public boolean inScreen(){
-    return inScreen;
+    return 16;
   }
   
   public int getDamage(){
     return 5;
   }
-}
-
-////////////////////////////////////////// Collitions ///////////////////////////////////////////////////////
-private int checkCollision(GameObject a, GameObject b){
-  
-  int damage = 0;
-  
-  float x1 = a.getX();
-  float y1 = a.getY();
-  float x2 = b.getX();
-  float y2 = b.getY();
-  
-  double objectARatio = (a.getSize()/2);
-  double objectBRatio = (b.getSize()/2);
-  
-  objectARatio -= objectARatio*0.1; // Offset
-  objectBRatio -= objectBRatio*0.1; // Offset
-  
-  double distancia = Math.sqrt((x2 - x1)*(x2 - x1) + (y2 - y1)*(y2 - y1));
-  
-  if(debugInfo){
-    ellipse(x1,y1,a.getSize(),a.getSize()); // Object A hitBox
-    ellipse(x2,y2,b.getSize(),b.getSize()); // Object B hitBox
-  }
-  
-  if(distancia <= (objectARatio + objectBRatio)){
-    hitSound1.play();
-    a.setHealth(a.getHealth()-b.getDamage());
-    b.setHealth(b.getHealth()-a.getDamage());
-    //println("> ("+a.toString()+") crashed with ("+b.toString()+")");
-  }
-  return damage;
 }

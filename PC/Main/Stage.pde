@@ -5,9 +5,9 @@ void drawStage(int level){
     if(!pause){
       background(BLACK);
       
-      if(frameCount%30 == 0 && levelCounter < 180) levelCounter++;
+      if(frameCount%30 == 0) levelCounter--;
       
-      if(level == 1){
+      if(level == 1 || level == 2){
         starsBackground.draw();
       }
       
@@ -20,12 +20,11 @@ void drawStage(int level){
       // ...
       playerInerface();
       
-      if(greetLevel < 100){
-        textFont(fontSpecial);
-        textAlign(CENTER);
-        fill(WHITE,100);
-        text("Level "+level,width/2,height/2);
-        greetLevel++;
+      // Level messages
+      if(levelCounter > LEVEL_TIME-3) showMessage("Level "+level);
+      else if(level%3==0 || level == 10)
+      {
+        if(levelCounter > -4 && levelCounter <= 0) showMessage("WARNING!!!\nBoss "+(level % 3 + 1)+" had came!!!",RED);
       }
     }
     else{ // Show pause menu
@@ -57,4 +56,19 @@ void restartStage(){
   localPlayer.setLifes(3);
   
   for(int i = 0; i < MAX_METEORITES; i++) meteorites[i].setY(-meteorites[i].getSize());
+}
+
+///////////// For impertants messages ///////////////////////////////////
+void showMessage(String message){
+  textFont(fontSpecial);
+  textAlign(CENTER);
+  fill(WHITE,100);
+  text(message,width/2,height/2);
+}
+
+void showMessage(String message, color col){
+  textFont(fontSpecial);
+  textAlign(CENTER);
+  fill(col,150);
+  text(message,width/2,height/2);
 }

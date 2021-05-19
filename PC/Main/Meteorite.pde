@@ -1,29 +1,5 @@
 // Meteorite Class
 
-public abstract class GameObject{
-  
-  private int health;
-  
-  GameObject(int health){
-    this. health = health;
-  }
-  
-  public abstract float getX();
-  public abstract float getY();
-  public abstract int getSize();
-  public abstract int getDamage();
-  
-  // Get methods
-  public int getHealth(){
-    return health;
-  }
-  
-  // Set methods
-  public void setHealth(int health){
-    this.health = health;
-  }
-}
-
 public class Meteorite extends GameObject{
   
   // There's a only meteorite sprite so, we can change the size and speed to show variety

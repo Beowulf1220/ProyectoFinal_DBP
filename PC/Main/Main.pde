@@ -67,7 +67,6 @@ Button changeButton;
 
 // Levels' Buttons
 Button levelButton[];
-int greetLevel;
 
 // Background stars
 StarsBackground starsBackground;
@@ -264,7 +263,7 @@ void oscEvent(OscMessage theOscMessage) {
     }else{
       laser = false;
     }
-    localX = theOscMessage.get(5).floatValue()*1.6; // Y sensor
-    localY = theOscMessage.get(4).floatValue()*1.6; // X sensor
+    localX = theOscMessage.get(5).floatValue()*2; // Y sensor
+    localY = theOscMessage.get(4).floatValue()*2; // X sensor
   }
 }

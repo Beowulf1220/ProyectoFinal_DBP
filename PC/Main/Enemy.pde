@@ -1,7 +1,7 @@
 // Enemy Class
 public class Enemy{
   
-  int health;
+  private int health;
   
   // Builder
   public Enemy(){
