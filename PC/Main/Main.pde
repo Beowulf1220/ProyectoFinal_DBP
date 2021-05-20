@@ -65,6 +65,9 @@ Button backButton;
 // Change Profile Button
 Button changeButton;
 
+// Sound Button
+Button soundButton;
+
 // Levels' Buttons
 Button levelButton[];
 
@@ -78,11 +81,11 @@ String playerName;
 static float localX;
 static float localY;
 static boolean laser;
+static boolean missile;
 // Another player
 Player otherPlayer;
 
 // Meteorites
-final int MAX_METEORITES = 4;
 Meteorite meteorites[];
 
 // Are we in cooperative mode game?
@@ -96,6 +99,7 @@ PImage meteoriteGIF[];
 PImage meduGIF[];
 
 PImage explotionGIF[];
+PImage mineImage;
 
 PImage moonImage;
 
@@ -106,6 +110,8 @@ SoundFile explotionSound;
 SoundFile laserSound;
 SoundFile menuSound;
 SoundFile stageSound;
+
+boolean soundEnable;
 
 // Conection PC and Android
 OscP5 oscP5;
@@ -147,6 +153,7 @@ void setup(){
   explotionSound = new SoundFile(this,"Resources/Sounds/explotion.wav",false);
   laserSound = new SoundFile(this,"Resources/Sounds/shoot.wav",false);
   menuSound = new SoundFile(this,"Resources/Sounds/menu.wav",false);
+  soundEnable = true;
   
   menuSound.amp(0.2);
   menuSound.loop();
@@ -170,6 +177,7 @@ void setup(){
   
   backButton = new Button("Back to menu",width-200,height-60,380,100);
   changeButton = new Button("Change user",200,height-60,380,100);
+  soundButton = new Button("Disable audio",200,height/5+148,340,90,WHITE);
   
   // Levels' Buttons
   levelButton = new Button[10];
@@ -211,6 +219,7 @@ void setup(){
   
   //moonImage = new PImage();
   moonImage = loadImage("Resources/Images/enviroment/moon.png");
+  mineImage = loadImage("Resources/Images/spaceShips/mine.png");
 }
 
 //Draw
@@ -259,18 +268,22 @@ void oscEvent(OscMessage theOscMessage) {
   {
     //println("Resivido");
     if(theOscMessage.get(0).stringValue().equals("true")) isPhoneConected = true;
-    //if(theOscMessage.get(1).stringValue().equals("true"))
-    if(theOscMessage.get(2).stringValue().equals("true")){
-      if(window == STAGE) pause = true;
+    if(theOscMessage.get(1).stringValue().equals("true")){ // missile button (Android)
+      missile = true;
+    }else{
+      missile = false;
+    }
+    if(theOscMessage.get(2).stringValue().equals("true")){ // ready button (Android)
+      pause = true;
     }else{
       pause = false;
     }
-    if(theOscMessage.get(3).stringValue().equals("true")){
+    if(theOscMessage.get(3).stringValue().equals("true")){ // laser button (Android)
       laser = true;
     }else{
       laser = false;
     }
-    localX = theOscMessage.get(5).floatValue()*2; // Y sensor
-    localY = theOscMessage.get(4).floatValue()*2; // X sensor
+    localX = theOscMessage.get(5).floatValue()*2; // Y sensor (Android)
+    localY = theOscMessage.get(4).floatValue()*2; // X sensor (Android)
   }
 }

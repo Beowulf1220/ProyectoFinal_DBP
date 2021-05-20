@@ -43,6 +43,20 @@ public class Button{
     text(text,positionX,positionY+16);
   }
   
+  void drawButton(int textSize){
+    // This draw a button with a border
+    fill(col);
+    rect(positionX,positionY,sizeX,sizeY,5);
+    fill(0);
+    rect(positionX,positionY,sizeX-4,sizeY-4,5);
+    
+    // Button's text
+    fill(col);
+    textFont(fontButton);
+    textSize(textSize);
+    text(text,positionX,positionY+16);
+  }
+  
   // Set methods
   void setText(String text){
     this.text = text;

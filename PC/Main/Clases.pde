@@ -1,8 +1,10 @@
 // A few constants
 static final int MAX_AMMO = 10; // Max ammo that players can shooting in a raw
-static final int MAX_MISSILE = 1;
+static final int MAX_MISSILE = 2;
 
-static final int LEVEL_TIME = 10;
+final int MAX_METEORITES = 4;
+
+static final int LEVEL_TIME = 160; // 2 minutes and 40 seconds
 
 // All objects must to be child from this class
 public abstract class GameObject{

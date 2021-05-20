@@ -5,6 +5,7 @@ void drawStage(int level){
     if(!pause){
       background(BLACK);
       if(frameCount%30 == 0) levelCounter--; // Counter
+      if(!stageSound.isPlaying() && soundEnable) stageSound.play();
       
       // Draw the background
       if(level <= 3){
@@ -48,8 +49,6 @@ void initStage(int level){
   levelCounter = LEVEL_TIME;
   stageSound = new SoundFile(this,"Resources/Sounds/wow.wav",false);
   stageSound.amp(0.4);
-  stageSound.loop();
-  stageSound.play();
   
   // Background
   if(level >= 4 && level <= 6){

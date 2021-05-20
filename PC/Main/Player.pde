@@ -18,6 +18,7 @@ public class Player extends GameObject{
   
   //shots
   Laser lasers[];
+  Missile missiles[];
   int shotDelay;
   
   // Builder
@@ -30,7 +31,9 @@ public class Player extends GameObject{
     
     avatar = new PImage[2];
     lasers = new Laser[MAX_AMMO];
+    missiles = new Missile[MAX_MISSILE];
     for(int i = 0; i < MAX_AMMO; i++) lasers[i] = new Laser();
+    for(int i = 0; i < MAX_MISSILE; i++) missiles[i] = new Missile();
     
     if(playerNumber == 1) // PLayer 1 sprite
     {
@@ -109,18 +112,14 @@ public class Player extends GameObject{
       avatarFrame++;
       if(avatarFrame >= 2) avatarFrame = 0;
       if(laser && shotDelay > 10){
-        shotDelay = 0;
-        for(int i = 0; i < MAX_AMMO; i++){
-          if(lasers[i].getHealth() <= 0){
-            lasers[i].restart(x,y);
-            laserSound.play();
-            break;
-          }
-        }
+        shootLaser();
+      }else if(missile && shotDelay > 10){
+        shootMissile();
       }else{
         if(shotDelay <= 10) shotDelay++;
       }
       for(int i = 0; i < MAX_AMMO; i++) if(lasers[i].getHealth() > 0) lasers[i].draw(); // draw lasers
+      for(int i = 0; i < MAX_MISSILE; i++) if(missiles[i].getHealth() > 0) missiles[i].draw(); // draw missiles
       image(avatar[avatarFrame], x, y);
     }
     else{ // dead
@@ -135,6 +134,30 @@ public class Player extends GameObject{
     }
   }
   
+  // Shoot laser
+  void shootLaser(){
+    shotDelay = 0;
+    for(int i = 0; i < MAX_AMMO; i++){
+      if(lasers[i].getHealth() <= 0){
+        lasers[i].restart(x,y);
+        laserSound.play();
+        break;
+      }
+    }
+  }
+  
+  void shootMissile(){
+    shotDelay = 0;
+    for(int i = 0; i < MAX_MISSILE; i++){
+      if(missiles[i].getHealth() <= 0){
+        missiles[i].restart(x,y);
+        //laserSound.play();
+        break;
+      }
+    }
+  }
+  
+  // Respawn our player with 100 HP
   void revive(){
     avatarFrame = 0;
     setHealth(100);
@@ -183,15 +206,19 @@ void playerInerface(){
 //////////////////////////////// Laser shots //////////////////////////////////////////
 public class Laser extends GameObject{
   
+  // Builder
   public Laser(){
     super(0);
   }
+  
+  // Revive lasers
   public void restart(float x, float y){
     this.x = x;
     this.y = y;
     setHealth(1);
   }
   
+  //Draw the laser
   public void draw(){
     if(this.getHealth() > 0){
       fill(RED);
@@ -211,5 +238,44 @@ public class Laser extends GameObject{
   
   public int getDamage(){
     return 5;
+  }
+}
+
+//////////////////////////////// Missile shoots //////////////////////////////////////////
+public class Missile extends GameObject{
+  
+  //Builder
+  public Missile(){
+    super(0);
+  }
+  
+  // Revive missiles
+  public void restart(float x, float y){
+    this.x = x;
+    this.y = y;
+    setHealth(1);
+  }
+  
+  public void draw(){
+    if(this.getHealth() > 0 || y < -24){
+      fill(RED);
+      image(mineImage,x,y,36,36);
+      x += 24*sin(y);
+      y -= 6;
+      if(y < -5){
+        setHealth(0);
+      }
+      // Check for missile collisions
+      for(int i = 0; i < MAX_METEORITES; i++) checkCollision(this,meteorites[i]);
+    }
+  }
+  
+  // Gets methods
+  public int getSize(){
+    return 24;
+  }
+  
+  public int getDamage(){
+    return 50;
   }
 }

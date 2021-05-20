@@ -104,16 +104,48 @@ void drawSettingsMenu(){
   starsBackground.draw();
   if(debugInfo) debugInfo();
   
-  rectMode(CENTER);
   textAlign(CENTER);
   
   textFont(fontMenu);
   fill(WHITE);
   text("Settings",width/2,height/6);
   
-  textFont(fontButton);
+  rectMode(0);
+  fill(WHITE,100);
+  rect(10,height/5,(width/2)-20,(3*height/5),10);
+  rect((width/2)+10,height/5,(width/2)-20,(3*height/5),10);
   
-  textSize(28);;
+  // Credits
+  textFont(fontInfo);
+  textSize(48);
+  fill(YELLOW);
+  text("Credits",(width/2)+10+(width/4)-10,height/5+48);
+  textFont(fontDefault);
+  textSize(30);
+  fill(LIGHT_BLUE);
+  text("Game developed by:",(width/2)+10+(width/4)-10,height/5+120);
+  fill(YELLOW);
+  text("Arnoldo Daniel",(width/2)+10+(width/4)-10,height/5+156);
+  text("Edwin Alfredo",(width/2)+10+(width/4)-10,height/5+192);
+  fill(LIGHT_BLUE);
+  text("Game developed in:",(width/2)+10+(width/4)-10,height/5+250);
+  fill(YELLOW);
+  text("Processing",(width/2)+10+(width/4)-10,height/5+286);
+  
+  // Settings
+  textFont(fontButton);
+  textSize(26);
+  text("Game audio: "+( soundEnable ? "ON" : "OFF" ),((width/2)-10)/2,height/5+64);
+  
+  rectMode(CENTER);
+  
+  soundButton.drawButton(28);
+  
+  textSize(14);
+  fill(LIGHT_BLUE);
+  text("This option enable or disable\n the game audio music, but\n SFX's will be present.",((width/2)-10)/2,2*height/3-32);
+  
+  textSize(28);
   backButton.drawButton();
   changeButton.drawButton();
 }
@@ -281,12 +313,21 @@ void mousePressed(){
   else if(settingsButton.isPressed() && window == MAIN_MENU){
     window = SETTINGS_MENU;
   }
+  else if(soundButton.isPressed() && window == SETTINGS_MENU){
+    soundEnable = !soundEnable;
+    soundButton.setText(soundEnable ? "Disable audio" : "Enable audio");
+    if(!soundEnable){
+      menuSound.pause();
+    }else{
+      if(!menuSound.isPlaying()) menuSound.play();
+    }
+  }
   else if(backButton.isPressed() && (window == SELECT_ROL_MENU || window == SETTINGS_MENU || window == LEVEL_MENU || window == WAITING_ROOM || window == JOIN_ROOM || pause || window == GAME_OVER_SCREEN)){
     window = MAIN_MENU;
     remoteAddress = "";
     gameOver = false;
-    if(stageSound.isPlaying()) stageSound.stop();
-    menuSound.play();
+    if(stageSound != null) stageSound.stop();
+    if(soundEnable && !menuSound.isPlaying()) menuSound.play();
   }
   else if(changeButton.isPressed() && window == SETTINGS_MENU){
     window = LOGIN_MENU;
@@ -330,6 +371,11 @@ void debugInfo(){
   text("Mouse: "+mouseX+","+mouseY,0,24);
   text("PlayerControl: "+(isPhoneConected ? "ON" : "OFF"),0,36);
   text("Cheats: "+(cheats ? "ON" : "OFF"),0,48);
-  text("local IP: "+myIPAddress,0,60);
+  text("Local IP: "+myIPAddress,0,60);
   text("Phone's IP: "+phoneAddress,0,72);
+  text("Coop IP: "+remoteAddress,0,84);
+  text("Sound: "+(soundEnable ? "ON" : "OFF"),0,96);
+  text("Window: "+window,0,108);
+  text("missile: "+missile,0,120);
+  text("laser: "+laser,0,132);
 }

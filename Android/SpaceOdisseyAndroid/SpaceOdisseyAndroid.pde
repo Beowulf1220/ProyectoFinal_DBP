@@ -44,7 +44,6 @@ void draw() {
   if(disparoMisil){
   fill(53,103,255);
   rect(width/18,height/6,(4.5*width)/18,(4*height)/6,7);
-  disparoMisil = false;
   }else{
   fill(53,103,180);
   rect(width/18,height/6,(4.5*width)/18,(4*height)/6,7);  
@@ -95,7 +94,7 @@ void mousePressed(){
     listo = false; 
   }
   //Boton de misil y de laser
-  if (mouseX > width/18 && mouseX < width/18+(4.5*width)/18 && mouseY > height/6 && mouseY < height/6+(4*height)/6 && disparoMisil==false) {
+  if (mouseX > width/18 && mouseX < width/18+(4.5*width)/18 && mouseY > height/6 && mouseY < height/6+(4*height)/6) {
     disparoMisil = true;
   }
   if (mouseX > 13*width/18 && mouseX < 13*width/18+(4.5*width)/18 && mouseY > height/6 && mouseY < height/6+(4*height)/6) {
@@ -105,6 +104,7 @@ void mousePressed(){
 
 void mouseReleased(){
   disparoLaser = false;
+  disparoMisil = false;
 }
 
 void onAccelerometerEvent(float x, float y, float z)
