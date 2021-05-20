@@ -1,10 +1,10 @@
 // Background
 
 public abstract class Background{
-  
   public abstract void draw();
 }
 
+// Backraund for levels 1 - 3
 public class StarsBackground extends Background{
   
   // Stars matrix
@@ -95,5 +95,28 @@ public class StarsBackground extends Background{
   
   public void setStarsSpeed(float speed){
     starsSpeed = speed;
+  }
+}
+
+// Backgraund for levels 4 - 6
+
+// Background for level 10 (last level)
+public class MadnessBackground extends Background{
+  
+  private PImage frames[];
+  private int frame;
+  
+  // Builder
+  public MadnessBackground(){
+    frame = 0;
+    frames = new PImage[8];
+    for(int i = 0; i < 8; i ++) frames[i] = loadImage("Resources/Images/level_10/frame-"+(i+1)+".gif");
+  }
+  
+  @Override
+  void draw(){
+    image(frames[frame],width/2,height/2,width,height);
+    if(frameCount%3==0) frame++;
+    if(frame >= 8) frame = 0;
   }
 }

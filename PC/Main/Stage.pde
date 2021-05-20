@@ -4,11 +4,13 @@ void drawStage(int level){
   if(!gameOver){
     if(!pause){
       background(BLACK);
+      if(frameCount%30 == 0) levelCounter--; // Counter
       
-      if(frameCount%30 == 0) levelCounter--;
-      
-      if(level == 1 || level == 2){
+      // Draw the background
+      if(level <= 3){
         starsBackground.draw();
+      }else{
+        stageBackground.draw();
       }
       
       if(debugInfo) debugInfo();
@@ -36,18 +38,44 @@ void drawStage(int level){
   }
 }
 
+/////////////////////////// initeialize the stage //////////////////////////
+void initStage(int level){
+  menuSound.pause();
+  if(isCooperativeMode) window = WAITING_ROOM;
+  else window = STAGE;
+  starsBackground.setStarsSpeed(6.5);
+  stageLevel = (level);
+  levelCounter = LEVEL_TIME;
+  stageSound = new SoundFile(this,"Resources/Sounds/wow.wav",false);
+  stageSound.amp(0.4);
+  stageSound.loop();
+  stageSound.play();
+  
+  // Background
+  if(level >= 4 && level <= 6){
+    // ...
+  }else if(level <= 9){
+    // ...
+  }else{
+    stageBackground = new MadnessBackground();
+  }
+}
+
+
 /////////////////////////// Draw Enemies /////////////////////////////////////
 void drawEnemies(){
+  
+  // Meteorites
   if(frameCount%150 == 0){
     for(int i = 0; i < MAX_METEORITES; i++){
-      if(!meteorites[i].isAlive()) meteorites[i].revive();
+      if(!meteorites[i].isAlive() && levelCounter > 0) meteorites[i].revive();
     }
   }
   for(int i = 0; i < MAX_METEORITES; i++){ // Draw only alive meteorites
-    if(meteorites[i].isAlive()){
-      meteorites[i].drawEnemy();
-    }
-  }
+      if(meteorites[i].isAlive()){
+        meteorites[i].drawEnemy();
+      }
+   }
 }
 
 ///////////////////////// Restart /////////////////////////////////////
@@ -69,6 +97,6 @@ void showMessage(String message){
 void showMessage(String message, color col){
   textFont(fontSpecial);
   textAlign(CENTER);
-  fill(col,150);
+  fill(col,250);
   text(message,width/2,height/2);
 }

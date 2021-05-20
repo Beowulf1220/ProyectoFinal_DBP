@@ -284,9 +284,9 @@ void mousePressed(){
   else if(backButton.isPressed() && (window == SELECT_ROL_MENU || window == SETTINGS_MENU || window == LEVEL_MENU || window == WAITING_ROOM || window == JOIN_ROOM || pause || window == GAME_OVER_SCREEN)){
     window = MAIN_MENU;
     remoteAddress = "";
-    pause = false;
     gameOver = false;
-    levelCounter = 0;
+    if(stageSound.isPlaying()) stageSound.stop();
+    menuSound.play();
   }
   else if(changeButton.isPressed() && window == SETTINGS_MENU){
     window = LOGIN_MENU;
@@ -305,11 +305,7 @@ void mousePressed(){
     // Check for every level button
     for(int i = 0; i < 10; i++){
       if(levelButton[i].isPressed() && localPlayer != null){
-        if(isCooperativeMode) window = WAITING_ROOM;
-        else window = STAGE;
-        starsBackground.setStarsSpeed(6.5);
-        stageLevel = (i+1);
-        levelCounter = 10;
+        initStage(i+1);
         break;
       }
     }

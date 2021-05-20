@@ -113,6 +113,7 @@ public class Player extends GameObject{
         for(int i = 0; i < MAX_AMMO; i++){
           if(lasers[i].getHealth() <= 0){
             lasers[i].restart(x,y);
+            laserSound.play();
             break;
           }
         }
@@ -147,7 +148,13 @@ public class Player extends GameObject{
     if(y < 0 && this.y > 0) this.y += y;
     for(int i = 0; i < MAX_METEORITES; i++){
       checkCollision(this,meteorites[i]); // Check collitions player-meteorites
-      for(int j = 0; j < MAX_AMMO; j++) if(lasers[j].getHealth() > 0 && meteorites[i].getHealth() > 0) checkCollision(meteorites[i],lasers[j]); // check laser and metoerites collition
+      for(int j = 0; j < MAX_AMMO; j++){ // check laser and metoerites collition
+        if(lasers[j].getHealth() > 0 && meteorites[i].getHealth() > 0){
+          if(checkCollision(meteorites[i],lasers[j])){
+            score += 10;
+          }
+        }
+      }
     }
     if(getHealth() <= 0){
       explotionSound.play();

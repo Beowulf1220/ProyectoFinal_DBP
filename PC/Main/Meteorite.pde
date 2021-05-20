@@ -4,7 +4,7 @@ public class Meteorite extends GameObject{
   
   // There's a only meteorite sprite so, we can change the size and speed to show variety
   
-  private float x,y; // Meteorite position
+  //private float x,y; // Meteorite position
   private int frame;
   private float speed;
   private float rotationSpeed;
@@ -72,18 +72,8 @@ public class Meteorite extends GameObject{
   }
   
   @Override
-  public float getX(){
-    return x;
-  }
-  
-  @Override
-  public float getY(){
-    return y;
-  }
-  
-  @Override
   public int getDamage(){
-    return 5;
+    return 10;
   }
   
   // Sets methods

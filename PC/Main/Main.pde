@@ -70,6 +70,7 @@ Button levelButton[];
 
 // Background stars
 StarsBackground starsBackground;
+Background stageBackground;
 
 // Local Player
 Player localPlayer;
@@ -103,6 +104,8 @@ SoundFile clickSound;
 SoundFile hitSound1;
 SoundFile explotionSound;
 SoundFile laserSound;
+SoundFile menuSound;
+SoundFile stageSound;
 
 // Conection PC and Android
 OscP5 oscP5;
@@ -142,7 +145,11 @@ void setup(){
   clickSound = new SoundFile(this,"Resources/Sounds/click.wav",false);
   hitSound1 = new SoundFile(this,"Resources/Sounds/hit.wav",false);
   explotionSound = new SoundFile(this,"Resources/Sounds/explotion.wav",false);
-  laserSound = new SoundFile(this,"Resources/Sounds/laser.wav",false);
+  laserSound = new SoundFile(this,"Resources/Sounds/shoot.wav",false);
+  menuSound = new SoundFile(this,"Resources/Sounds/menu.wav",false);
+  
+  menuSound.amp(0.2);
+  menuSound.loop();
   
   //Text fonts
   fontMenu = createFont("Resources/Fonts/Roose Sally.otf",90);
@@ -200,7 +207,7 @@ void setup(){
   for(int i = 0; i < 8; i++) explotionGIF[i] = loadImage("Resources/Images/effects/explotion/frame-0"+(i+1)+".gif");
   
   meduGIF = new PImage[10];
-  for(int i = 0; i < 10; i++) meduGIF[i] = loadImage("Resources/Images/Enemies/medu/frame-0"+(i+1)+".gif");
+  for(int i = 0; i < 10; i++) meduGIF[i] = loadImage("Resources/Images/Enemies/medu/frame-"+(i+1)+".gif");
   
   //moonImage = new PImage();
   moonImage = loadImage("Resources/Images/enviroment/moon.png");
