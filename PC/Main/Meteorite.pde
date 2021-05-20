@@ -38,6 +38,8 @@ public class Meteorite extends GameObject{
     noSmooth();
     image(meteoriteGIF[frame],x,y,size,size);
     smooth(4);
+    textFont(fontDefault);
+    if(debugInfo) text(String.valueOf(this.getHealth()),x,y-12);
     y += speed;
     if(frameCount%round(rotationSpeed) == 0) frame++;
     if(frame >= 20) frame = 0;
@@ -47,6 +49,11 @@ public class Meteorite extends GameObject{
     }
     if(getHealth() <= 0){
       alive = false;
+      float ran = random(0,1);
+      if(ran < 0.1){
+        if(ran < 0.05) health.respawn(x,y);
+        else shield.respawn(x,y);
+      }
       y = -(size/2);
     }
   }

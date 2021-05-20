@@ -1,6 +1,6 @@
 // Stage where every level must to run
 
-void drawStage(int level){
+void drawStage(){
   if(!gameOver){
     if(!pause){
       background(BLACK);
@@ -8,7 +8,7 @@ void drawStage(int level){
       if(!stageSound.isPlaying() && soundEnable) stageSound.play();
       
       // Draw the background
-      if(level <= 3){
+      if(currentLevel <= 3){
         starsBackground.draw();
       }else{
         stageBackground.draw();
@@ -21,60 +21,100 @@ void drawStage(int level){
       
       drawEnemies();
       // ...
+      
+      // Support
+      health.draw();
+      shield.draw();
+      
       playerInerface();
       
       // Level messages
-      if(levelCounter > LEVEL_TIME-3) showMessage("Level "+level);
-      else if(level%3==0 || level == 10)
+      if(levelCounter > LEVEL_TIME-3) showMessage("Level "+currentLevel);
+      else if(currentLevel%3==0 || currentLevel == 10)
       {
-        if(levelCounter > -4 && levelCounter <= 0) showMessage("WARNING!!!\nBoss "+(level % 3 + 1)+" had came!!!",RED);
+        if(levelCounter > -4 && levelCounter <= 0) showMessage("WARNING!!!\nBoss "+(currentLevel % 3 + 1)+" had came!!!",RED);
+      }
+      if(levelCounter == -5){
+        gameOver = true;
       }
     }
     else{ // Show pause menu
       pauseMenu();
     }
-  }else{
+  }
+  else if(localPlayer.getLifes() > 0 || localPlayer.getHealth() > 0){
+    window = NEXT_LEVEL;
+    currentLevel++;
+  }
+  else{
     window = GAME_OVER_SCREEN;
     restartStage();
   }
 }
 
 /////////////////////////// initeialize the stage //////////////////////////
-void initStage(int level){
-  menuSound.pause();
+void initStage(){
+  
   if(isCooperativeMode) window = WAITING_ROOM;
   else window = STAGE;
+  gameOver = false;
+  if(menuSound.isPlaying()) menuSound.pause();
   starsBackground.setStarsSpeed(6.5);
-  stageLevel = (level);
   levelCounter = LEVEL_TIME;
-  stageSound = new SoundFile(this,"Resources/Sounds/wow.wav",false);
-  stageSound.amp(0.4);
+  if(stageSound == null){
+    stageSound = new SoundFile(this,"Resources/Sounds/wow.wav",false);
+    stageSound.amp(0.4);
+  }
+  
+  if(health == null) health = new Health();
+  if(shield == null) shield = new Shield();
   
   // Background
-  if(level >= 4 && level <= 6){
-    // ...
-  }else if(level <= 9){
-    // ...
+  if(currentLevel >= 4 && currentLevel <= 6){
+    stageBackground = new CrazyBackground();
+  }else if(currentLevel <= 9){
+    stageBackground = new OceanBackground();
   }else{
     stageBackground = new MadnessBackground();
   }
+  
+  // Enemies
+  meteorites = new Meteorite[MAX_METEORITES];
+  enemies = new Enemy[MAX_ENEMIES];
+  
+  for(int i = 0; i < MAX_METEORITES; i++) meteorites[i] = new Meteorite((int)random(32,256),random(1,10));
+  for(int i = 0; i < MAX_ENEMIES; i++) enemies[i] = new Medusa();
 }
 
+////////////////////// Level transition /////////////////////////////////
+void nextLevel(){
+  initStage();
+}
 
 /////////////////////////// Draw Enemies /////////////////////////////////////
 void drawEnemies(){
   
-  // Meteorites
+  // Count
   if(frameCount%150 == 0){
+    // Metoeorites respawn
     for(int i = 0; i < MAX_METEORITES; i++){
       if(!meteorites[i].isAlive() && levelCounter > 0) meteorites[i].revive();
     }
+    // Enemies respawn
+    for(int i = 0; i < MAX_ENEMIES; i++){
+      if(enemies[i].getHealth() <= 0 && levelCounter > 0) enemies[i].respawn();
+    }
   }
+  // Meteorites draw
   for(int i = 0; i < MAX_METEORITES; i++){ // Draw only alive meteorites
       if(meteorites[i].isAlive()){
         meteorites[i].drawEnemy();
       }
    }
+   // Enemies draw
+    for(int i = 0; i < MAX_ENEMIES; i++){
+      if(enemies[i].getHealth() > 0) enemies[i].draw();
+    }
 }
 
 ///////////////////////// Restart /////////////////////////////////////

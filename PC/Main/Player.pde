@@ -70,6 +70,10 @@ public class Player extends GameObject{
     this.lifes = lifes;
   }
   
+  public void setShield(int shield){
+    this.shield = shield;
+  }
+  
   // Get methods
   public String getName(){
     return name;
@@ -108,6 +112,8 @@ public class Player extends GameObject{
   // Intersting methods
   void drawPlayer(){
     if(getHealth() > 0){  // alive
+      if(getHealth() > 100) setHealth(100);
+      if(getShield() > 100) setShield(100);
       move(localX,localY);
       avatarFrame++;
       if(avatarFrame >= 2) avatarFrame = 0;
@@ -118,9 +124,24 @@ public class Player extends GameObject{
       }else{
         if(shotDelay <= 10) shotDelay++;
       }
-      for(int i = 0; i < MAX_AMMO; i++) if(lasers[i].getHealth() > 0) lasers[i].draw(); // draw lasers
+      for(int i = 0; i < MAX_AMMO; i++){
+        if(lasers[i].getHealth() > 0){
+          lasers[i].draw(); // draw lasers
+        }
+      }
       for(int i = 0; i < MAX_MISSILE; i++) if(missiles[i].getHealth() > 0) missiles[i].draw(); // draw missiles
+      if(this.getImmuneTime() > 0){
+        if(frameCount%3==0) tint(RED,150);
+        else tint(WHITE,150);
+        image(avatar[avatarFrame], x, y);
+      }
       image(avatar[avatarFrame], x, y);
+      noTint();
+      fill(LIGHT_BLUE,50);
+      if(shield > 0){
+        ellipse(x,y,64,64);
+      }
+      if(this.getImmuneTime() >= 1) this.setImmuneTime(getImmuneTime()-1);
     }
     else{ // dead
       image(explotionGIF[avatarFrame],x,y);
@@ -151,7 +172,6 @@ public class Player extends GameObject{
     for(int i = 0; i < MAX_MISSILE; i++){
       if(missiles[i].getHealth() <= 0){
         missiles[i].restart(x,y);
-        //laserSound.play();
         break;
       }
     }
@@ -169,14 +189,26 @@ public class Player extends GameObject{
     if(x < 0 && this.x > 0) this.x += x;
     if(y > 0 && this.y < height) this.y += y;
     if(y < 0 && this.y > 0) this.y += y;
-    for(int i = 0; i < MAX_METEORITES; i++){
-      checkCollision(this,meteorites[i]); // Check collitions player-meteorites
-      for(int j = 0; j < MAX_AMMO; j++){ // check laser and metoerites collition
-        if(lasers[j].getHealth() > 0 && meteorites[i].getHealth() > 0){
-          if(checkCollision(meteorites[i],lasers[j])){
-            score += 10;
-          }
+    for(int i = 0; i < MAX_METEORITES; i++){ // Check collitions player-meteorites
+      if(this.getImmuneTime() <= 0){
+        if(shield > 0){
+          int damage = checkCollision(this,meteorites[i]);
+          this.setHealth(this.getHealth()+damage);
+          shield -= damage;
+          if(shield < 0)shield = 0;
         }
+        else checkCollision(this,meteorites[i]);
+      }
+    }
+    for(int i = 0; i < MAX_ENEMIES; i++){ // Check collitions player-enemies
+      if(this.getImmuneTime() <= 0){
+        if(shield > 0){
+          int damage = checkCollision(this,enemies[i]);
+          this.setHealth(this.getHealth()+damage*2);
+          shield -= damage;
+          if(shield < 0)shield = 0;
+        }
+        else checkCollision(this,enemies[i]);
       }
     }
     if(getHealth() <= 0){
@@ -228,6 +260,8 @@ public class Laser extends GameObject{
       if(y < -5){
         setHealth(0);
       }
+      for(int i = 0; i < MAX_METEORITES; i++) checkCollision(this,meteorites[i]);
+      for(int i = 0; i < MAX_ENEMIES; i++) checkCollision(this,enemies[i]);
     }
   }
   
@@ -267,6 +301,7 @@ public class Missile extends GameObject{
       }
       // Check for missile collisions
       for(int i = 0; i < MAX_METEORITES; i++) checkCollision(this,meteorites[i]);
+      for(int i = 0; i < MAX_ENEMIES; i++) checkCollision(this,enemies[i]);
     }
   }
   
@@ -276,6 +311,6 @@ public class Missile extends GameObject{
   }
   
   public int getDamage(){
-    return 50;
+    return 25;
   }
 }

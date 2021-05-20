@@ -4,7 +4,7 @@ public abstract class Background{
   public abstract void draw();
 }
 
-// Backraund for levels 1 - 3
+// Backraund for levels 1-3 and the menu
 public class StarsBackground extends Background{
   
   // Stars matrix
@@ -98,7 +98,47 @@ public class StarsBackground extends Background{
   }
 }
 
-// Backgraund for levels 4 - 6
+// Background for levels 4-6
+public class CrazyBackground extends Background{
+  
+  private PImage frames[];
+  private int frame;
+  
+  // Builder
+  public CrazyBackground(){
+    frame = 0;
+    frames = new PImage[10];
+    for(int i = 0; i < 10; i ++) frames[i] = loadImage("Resources/Images/enviroment/level_4/frame-"+(i+1)+".gif");
+  }
+  
+  @Override
+  void draw(){
+    image(frames[frame],width/2,height/2,width,height);
+    if(frameCount%3==0) frame++;
+    if(frame >= 10) frame = 0;
+  }
+}
+
+// Background for levels 7-9
+public class OceanBackground extends Background{
+  
+  private PImage frames[];
+  private int frame;
+  
+  // Builder
+  public OceanBackground(){
+    frame = 0;
+    frames = new PImage[10];
+    for(int i = 0; i < 10; i ++) frames[i] = loadImage("Resources/Images/enviroment/level_7/frame-"+(i+1)+".gif");
+  }
+  
+  @Override
+  void draw(){
+    image(frames[frame],width/2,height/2,width,height);
+    if(frameCount%3==0) frame++;
+    if(frame >= 10) frame = 0;
+  }
+}
 
 // Background for level 10 (last level)
 public class MadnessBackground extends Background{
@@ -110,7 +150,7 @@ public class MadnessBackground extends Background{
   public MadnessBackground(){
     frame = 0;
     frames = new PImage[8];
-    for(int i = 0; i < 8; i ++) frames[i] = loadImage("Resources/Images/level_10/frame-"+(i+1)+".gif");
+    for(int i = 0; i < 8; i ++) frames[i] = loadImage("Resources/Images/enviroment/level_10/frame-"+(i+1)+".gif");
   }
   
   @Override

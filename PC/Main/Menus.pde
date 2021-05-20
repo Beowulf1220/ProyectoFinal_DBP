@@ -328,6 +328,10 @@ void mousePressed(){
     gameOver = false;
     if(stageSound != null) stageSound.stop();
     if(soundEnable && !menuSound.isPlaying()) menuSound.play();
+    localPlayer.setScore(0);
+    localPlayer.setLifes(3);
+    localPlayer.setHealth(100);
+    localPlayer.setShield(0);
   }
   else if(changeButton.isPressed() && window == SETTINGS_MENU){
     window = LOGIN_MENU;
@@ -346,7 +350,8 @@ void mousePressed(){
     // Check for every level button
     for(int i = 0; i < 10; i++){
       if(levelButton[i].isPressed() && localPlayer != null){
-        initStage(i+1);
+        currentLevel = i+1;
+        initStage();
         break;
       }
     }

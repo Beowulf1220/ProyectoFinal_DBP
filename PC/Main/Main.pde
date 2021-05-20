@@ -32,6 +32,7 @@ public static final int WAITING_ROOM = 6;
 public static final int JOIN_ROOM = 7;
 public static final int JOIN_PHONE = 8;
 public static final int GAME_OVER_SCREEN = 9;
+public static final int NEXT_LEVEL = 10;
 
 // A few constants
 final color GREEN = color(0,255,0);
@@ -88,6 +89,12 @@ Player otherPlayer;
 // Meteorites
 Meteorite meteorites[];
 
+//Enemyies
+Enemy enemies[];
+
+//bigBoss
+
+
 // Are we in cooperative mode game?
 boolean isCooperativeMode;
 
@@ -99,9 +106,14 @@ PImage meteoriteGIF[];
 PImage meduGIF[];
 
 PImage explotionGIF[];
-PImage mineImage;
+PImage mineImage; // Missile image
 
 PImage moonImage;
+PImage hearthImage;
+PImage shieldImage;
+
+Health health;
+Shield shield;
 
 // Sounds
 SoundFile clickSound;
@@ -121,6 +133,8 @@ String phoneAddress; // phone address (control)
 NetAddress remoteLocation;
 
 boolean isPhoneConected;
+
+public static int currentLevel;
 
 void setup(){
   // Window
@@ -197,10 +211,6 @@ void setup(){
   // Frame rate
   frameRate(30);
   
-  // Enemies
-  meteorites = new Meteorite[MAX_METEORITES];
-  for(int i = 0; i < MAX_METEORITES; i++) meteorites[i] = new Meteorite((int)random(32,256),random(1,10));
-  
   //Image menu
   float rando = random(0,1);
   if(rando >= 0.5) menuImg = loadImage("Resources/Images/rusiaMenu.png");
@@ -214,12 +224,15 @@ void setup(){
   explotionGIF = new PImage[8];
   for(int i = 0; i < 8; i++) explotionGIF[i] = loadImage("Resources/Images/effects/explotion/frame-0"+(i+1)+".gif");
   
-  meduGIF = new PImage[10];
-  for(int i = 0; i < 10; i++) meduGIF[i] = loadImage("Resources/Images/Enemies/medu/frame-"+(i+1)+".gif");
+  meduGIF = new PImage[7];
+  for(int i = 0; i < 7; i++) meduGIF[i] = loadImage("Resources/Images/Enemies/medu/frame-"+(i+1)+".gif");
   
   //moonImage = new PImage();
   moonImage = loadImage("Resources/Images/enviroment/moon.png");
   mineImage = loadImage("Resources/Images/spaceShips/mine.png");
+  
+  hearthImage = loadImage("Resources/Images/items/hearth.png");
+  shieldImage = loadImage("Resources/Images/items/shield.png");
 }
 
 //Draw
@@ -241,7 +254,7 @@ void draw(){
        drawLevelMenu();
        break;
      case STAGE:
-       drawStage(stageLevel);
+       drawStage();
        break;
      case WAITING_ROOM:
        drawWaitingRoom();
@@ -254,6 +267,9 @@ void draw(){
        break;
      case GAME_OVER_SCREEN:
        drawGameOverScreen();
+       break;
+     case NEXT_LEVEL:
+       nextLevel();
        break;
      default:
        text("Error: window not found!",width/2,height/2);
