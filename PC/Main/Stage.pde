@@ -8,10 +8,22 @@ void drawStage(){
       if(!stageSound.isPlaying() && soundEnable) stageSound.play();
       
       // Draw the background
-      if(currentLevel <= 3){
+      if(currentLevel <= 3){ // level 1-3
         starsBackground.draw();
+        fill(BLACK,220);
+        if(currentLevel == 3 && levelCounter > -5){
+          image(moonImage,80,80,levelCounter+20,levelCounter+20);
+          ellipse(80,80,levelCounter+20,levelCounter+20);
+        }
+        else if(currentLevel == 1 || currentLevel == 2){ // level 4-10
+          image(moonImage,80,80,128,128);
+          ellipse(80,80,128,128);
+        }
       }else{
         stageBackground.draw();
+      }
+      if(levelCounter < -5 && bigBoss != null){
+        bigBoss.draw();
       }
       
       if(debugInfo) debugInfo();
@@ -28,21 +40,26 @@ void drawStage(){
       
       playerInerface();
       
+      
       // Level messages
       if(levelCounter > LEVEL_TIME-3) showMessage("Level "+currentLevel);
       else if(currentLevel%3==0 || currentLevel == 10)
       {
         if(levelCounter > -4 && levelCounter <= 0) showMessage("WARNING!!!\nBoss "+(currentLevel % 3 + 1)+" had came!!!",RED);
+        else{
+          if(bigBoss.getHealth() <= 0){
+            showMessage("Jackpot");
+            if(levelCounter%17==0) gameOver = true;
+          }
+        }
       }
-      if(levelCounter == -5){
-        gameOver = true;
-      }
+      if(levelCounter < -3 && bigBoss == null) gameOver = true;
     }
     else{ // Show pause menu
       pauseMenu();
     }
   }
-  else if(localPlayer.getLifes() > 0 || localPlayer.getHealth() > 0){
+  else if(localPlayer.getLifes() > 0 || localPlayer.getHealth() > 0){ // change the level
     window = NEXT_LEVEL;
     currentLevel++;
   }
@@ -84,6 +101,9 @@ void initStage(){
   
   for(int i = 0; i < MAX_METEORITES; i++) meteorites[i] = new Meteorite((int)random(32,256),random(1,10));
   for(int i = 0; i < MAX_ENEMIES; i++) enemies[i] = new Medusa();
+  
+  // bigBoss
+  if(currentLevel == 3) bigBoss = new bigMoon();
 }
 
 ////////////////////// Level transition /////////////////////////////////

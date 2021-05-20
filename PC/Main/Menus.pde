@@ -383,4 +383,5 @@ void debugInfo(){
   text("Window: "+window,0,108);
   text("missile: "+missile,0,120);
   text("laser: "+laser,0,132);
+  text("level counter: "+levelCounter,0,144);
 }

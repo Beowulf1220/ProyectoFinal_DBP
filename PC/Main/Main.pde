@@ -10,7 +10,6 @@
   Task remaining:
   > add more enemies
   > add the bosses
-  > add a few power up's
   > add firebase conection
   > add ardunio conection
 */
@@ -91,6 +90,7 @@ Meteorite meteorites[];
 
 //Enemyies
 Enemy enemies[];
+Enemy bigBoss;
 
 //bigBoss
 
@@ -228,7 +228,7 @@ void setup(){
   for(int i = 0; i < 7; i++) meduGIF[i] = loadImage("Resources/Images/Enemies/medu/frame-"+(i+1)+".gif");
   
   //moonImage = new PImage();
-  moonImage = loadImage("Resources/Images/enviroment/moon.png");
+  moonImage = loadImage("Resources/Images/Enemies/bigMoon/moon.png");
   mineImage = loadImage("Resources/Images/spaceShips/mine.png");
   
   hearthImage = loadImage("Resources/Images/items/hearth.png");

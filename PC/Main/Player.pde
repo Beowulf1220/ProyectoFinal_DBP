@@ -189,7 +189,7 @@ public class Player extends GameObject{
     if(x < 0 && this.x > 0) this.x += x;
     if(y > 0 && this.y < height) this.y += y;
     if(y < 0 && this.y > 0) this.y += y;
-    for(int i = 0; i < MAX_METEORITES; i++){ // Check collitions player-meteorites
+    for(int i = 0; i < MAX_METEORITES; i++){ // Check player-meteorites collitions
       if(this.getImmuneTime() <= 0){
         if(shield > 0){
           int damage = checkCollision(this,meteorites[i]);
@@ -200,7 +200,7 @@ public class Player extends GameObject{
         else checkCollision(this,meteorites[i]);
       }
     }
-    for(int i = 0; i < MAX_ENEMIES; i++){ // Check collitions player-enemies
+    for(int i = 0; i < MAX_ENEMIES; i++){ // Check player-enemies collition
       if(this.getImmuneTime() <= 0){
         if(shield > 0){
           int damage = checkCollision(this,enemies[i]);
@@ -210,6 +210,15 @@ public class Player extends GameObject{
         }
         else checkCollision(this,enemies[i]);
       }
+    }
+    if(this.getImmuneTime() <= 0){ // Check player-bigBoss collision
+        if(shield > 0){
+        int damage = checkCollision(this,bigBoss);
+        this.setHealth(this.getHealth()+damage*2);
+        shield -= damage;
+        if(shield < 0)shield = 0;
+      }
+      else checkCollision(this,bigBoss);
     }
     if(getHealth() <= 0){
       explotionSound.play();
@@ -262,6 +271,7 @@ public class Laser extends GameObject{
       }
       for(int i = 0; i < MAX_METEORITES; i++) checkCollision(this,meteorites[i]);
       for(int i = 0; i < MAX_ENEMIES; i++) checkCollision(this,enemies[i]);
+      if(bigBoss != null) checkCollision(this,bigBoss);
     }
   }
   
@@ -302,6 +312,7 @@ public class Missile extends GameObject{
       // Check for missile collisions
       for(int i = 0; i < MAX_METEORITES; i++) checkCollision(this,meteorites[i]);
       for(int i = 0; i < MAX_ENEMIES; i++) checkCollision(this,enemies[i]);
+      if(bigBoss != null) checkCollision(this,bigBoss);
     }
   }
   

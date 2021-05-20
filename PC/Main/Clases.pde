@@ -5,7 +5,7 @@ static final int MAX_MISSILE = 2;
 final int MAX_METEORITES = 4;
 final int MAX_ENEMIES = 6;
 
-static final int LEVEL_TIME = 160; // 2 minutes and 40 seconds
+static final int LEVEL_TIME = 10; // 2 minutes and 40 seconds
 
 // All objects must to be child from this class
 public abstract class GameObject{
@@ -138,7 +138,8 @@ private int checkCollision(GameObject a, GameObject b){
   
   int crashed = 0;
   
-  if(!(a.getHealth() > 0 && b.getHealth() > 0)) return crashed;
+  if(a == null || b == null) return crashed;
+  else if(!(a.getHealth() > 0 && b.getHealth() > 0)) return crashed;
   
   float x1 = a.getX();
   float y1 = a.getY();
@@ -168,7 +169,7 @@ private int checkCollision(GameObject a, GameObject b){
       a.setImmuneTime(30);
       b.setImmuneTime(30);
     }
-    println("> ("+a.toString()+") crashed with ("+b.toString()+")");
+    //println("> ("+a.toString()+") crashed with ("+b.toString()+")");
   }
   return crashed; // return the damage from object B to A
 }
