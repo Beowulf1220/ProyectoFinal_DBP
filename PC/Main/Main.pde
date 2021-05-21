@@ -103,6 +103,7 @@ PImage menuImg;
 //Images game
 PImage meteoriteGIF[];
 PImage meduGIF[];
+PImage bigBrainGIF[];
 
 PImage explotionGIF[];
 PImage mineImage; // Missile image
@@ -139,6 +140,7 @@ String phoneAddress; // phone address (control)
 NetAddress remoteLocation;
 
 boolean isPhoneConected;
+boolean isCoopConected;
 
 public static int currentLevel;
 
@@ -147,6 +149,7 @@ void setup(){
   surface.setTitle("Space Odissey - Powered by Godzilla");
   size(800,600);
   window = LOGIN_MENU;
+  smooth(4);
   starsBackground = new StarsBackground();
   pause = false;
   
@@ -160,6 +163,7 @@ void setup(){
   phoneAddress = "";
   
   isPhoneConected = false;
+  isCoopConected = false;
   
   // Others
   debugInfo = false;
@@ -174,9 +178,11 @@ void setup(){
   laserSound = new SoundFile(this,"Resources/Sounds/shoot.wav",false);
   menuSound = new SoundFile(this,"Resources/Sounds/menu.wav",false);
   laughSound = new SoundFile(this,"Resources/Sounds/laugh.wav");
+  stageSound = new SoundFile(this, "Resources/Sounds/wow.wav", false);
   soundEnable = true;
   
   menuSound.amp(0.2);
+  stageSound.amp(0.3);
   menuSound.loop();
   
   //Text fonts
@@ -246,12 +252,26 @@ void setup(){
   ufoGIF = new PImage[19];
   for(int i = 0; i < 19; i++) ufoGIF[i] = loadImage("Resources/Images/Enemies/ufo/frame-"+(i+1)+".gif");
   
+  bigBrainGIF = new PImage[2];
+  bigBrainGIF[0] = loadImage("Resources/Images/Enemies/bigBrain/frame-1.gif");
+  bigBrainGIF[1] = loadImage("Resources/Images/Enemies/bigBrain/frame-2.gif");
+  
   //moonImage = new PImage();
   moonImage = loadImage("Resources/Images/Enemies/bigMoon/moon.png");
   mineImage = loadImage("Resources/Images/spaceShips/mine.png");
   
   hearthImage = loadImage("Resources/Images/items/hearth.png");
   shieldImage = loadImage("Resources/Images/items/shield.png");
+  
+  // Support items
+  health = new Health();
+  shield = new Shield();
+  
+  // Enemies
+  meteorites = new Meteorite[MAX_METEORITES];
+  for (int i = 0; i < MAX_METEORITES; i++) meteorites[i] = new Meteorite((int)random(32, 256), random(1, 10));
+  
+  enemies = new Enemy[MAX_ENEMIES];
 }
 
 //Draw
