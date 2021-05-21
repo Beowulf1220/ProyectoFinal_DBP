@@ -269,9 +269,15 @@ public class Laser extends GameObject{
       if(y < -5){
         setHealth(0);
       }
-      for(int i = 0; i < MAX_METEORITES; i++) checkCollision(this,meteorites[i]);
-      for(int i = 0; i < MAX_ENEMIES; i++) checkCollision(this,enemies[i]);
-      if(bigBoss != null) checkCollision(this,bigBoss);
+      for(int i = 0; i < MAX_METEORITES; i++){
+        checkCollision(this,meteorites[i]);
+      }
+      for(int i = 0; i < MAX_ENEMIES; i++){
+        checkCollision(this,enemies[i]);
+      }
+      if(bigBoss != null){
+        checkCollision(this,bigBoss);
+      }
     }
   }
   

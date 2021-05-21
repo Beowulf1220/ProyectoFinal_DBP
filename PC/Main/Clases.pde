@@ -4,9 +4,10 @@ static final int MAX_MISSILE = 2;
 
 final int MAX_METEORITES = 4;
 final int MAX_ENEMIES = 6;
-final int MAX_SMALL_SKULL = 8;
+final int MAX_SMALL_SKULL = 5;
+final int MAX_UFO_LASER = 2;
 
-static final int LEVEL_TIME = 160; // 2 minutes and 40 seconds
+static final int LEVEL_TIME = 90; // 1 minute and 30 seconds
 
 // All objects must to be child from this class
 public abstract class GameObject{
@@ -163,7 +164,10 @@ private int checkCollision(GameObject a, GameObject b){
   if(distancia <= (objectARatio + objectBRatio)){
     crashed = b.getHealth();
     if((a instanceof Health || b instanceof Health) ||(a instanceof Shield || b instanceof Shield)) clickSound.play();
-    else hitSound1.play();
+    else{
+      if(hitSound1.isPlaying()) hitSound1.stop();
+      hitSound1.play();
+    }
     if(!(a instanceof Shield) || (b instanceof Shield)){
       a.setHealth(a.getHealth()-b.getDamage());
       b.setHealth(b.getHealth()-a.getDamage());
@@ -173,4 +177,43 @@ private int checkCollision(GameObject a, GameObject b){
     //println("> ("+a.toString()+") crashed with ("+b.toString()+")");
   }
   return crashed; // return the damage from object B to A
+}
+
+////////////////////// little alien waiting for someone  /////////////////////////////
+public class ufoWait extends GameObject{
+  
+  private int frame;
+  PImage ufoWaitGIF[];
+  
+  public ufoWait(float x, float y){
+    super(0);
+    frame = 0;
+    this.x = x;
+    this.y = y;
+    
+    ufoWaitGIF = new PImage[29];
+    for(int i = 0; i < 29; i++){
+      ufoWaitGIF[i] = loadImage("Resources/Images/ufoWait/frame-"+(i+1)+".gif");
+    }
+  }
+  
+  public int getDamage(){
+    return 0;
+  }
+  
+  public int getSize(){
+    return 32;
+  }
+  
+  public void draw(){
+    image(ufoWaitGIF[frame],x,y);
+    if(frameCount%4==0) frame++;
+    if(frame == 29) frame = 0;
+  }
+  
+  public void respawn(float x, float y){
+    this.x = x;
+    this.y = y;
+    setHealth(0);
+  }
 }

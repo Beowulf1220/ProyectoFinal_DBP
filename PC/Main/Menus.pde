@@ -184,6 +184,8 @@ void drawWaitingRoom(){
   fill(YELLOW);
   text("Your IP: "+myIPAddress,width/2,height/2+40);
   
+  ufoWaiting.draw();
+  
   backButton.drawButton();
 }
 
@@ -209,6 +211,24 @@ void drawJoinRoom(){
   textFont(fontDefault);
   textSize(24);
   text("Press ENTER to continue",width/2,height/3+40);
+  
+  backButton.drawButton();
+}
+
+///////////////////////// End game /////////////////////////
+void drawEnd(){
+  background(BLACK);
+  starsBackground.draw();
+  if(debugInfo) debugInfo();
+  
+  rectMode(CENTER);
+  textAlign(CENTER);
+  
+  fill(WHITE);
+  textFont(fontMenu);
+  text("Contratulations!!!",width/2,height/2);
+  
+  ufoWaiting.draw();
   
   backButton.drawButton();
 }
@@ -322,7 +342,7 @@ void mousePressed(){
       if(!menuSound.isPlaying()) menuSound.play();
     }
   }
-  else if(backButton.isPressed() && (window == SELECT_ROL_MENU || window == SETTINGS_MENU || window == LEVEL_MENU || window == WAITING_ROOM || window == JOIN_ROOM || pause || window == GAME_OVER_SCREEN)){
+  else if(backButton.isPressed() && (window == SELECT_ROL_MENU || window == SETTINGS_MENU || window == LEVEL_MENU || window == WAITING_ROOM || window == JOIN_ROOM || pause || window == GAME_OVER_SCREEN || window ==END)){
     window = MAIN_MENU;
     remoteAddress = "";
     gameOver = false;

@@ -133,7 +133,7 @@ public class bigMoon extends Enemy{
   
   public void respawn(){ // Don't use
     setHealth(200);
-    setPosition(random(54,width-54),-random(-54,-300));
+    setPosition(random(54,width-54),-random(54,300));
   }
 }
 
@@ -148,7 +148,7 @@ public class bigSkull extends Enemy{
   public bigSkull(){
     ammo = new smallSkull[MAX_SMALL_SKULL];
     for(int i = 0; i < MAX_SMALL_SKULL; i++) ammo[i] = new smallSkull();
-    setHealth(500); // health
+    setHealth(600); // health
     right = false;
     x = width/2;
     y = -300;
@@ -165,13 +165,15 @@ public class bigSkull extends Enemy{
       }else{
         tint(250-(this.getHealth()/2),(this.getHealth())-250,0);
       }
-      textFont(fontDefault);
-      if(debugInfo) text(String.valueOf(this.getHealth()),x,y);
       image(bigSkullGIF[frame],x,y,300,300);
       noTint();
       if(this.getImmuneTime() >= 1) this.setImmuneTime(getImmuneTime()-1);
       frame++;
       if(frame == 8) frame = 0;
+      if(getHealth() <= 100) frame = 3;
+      if(frameCount%200==0) laughSound.play();
+      textFont(fontDefault);
+      if(debugInfo) text(String.valueOf(this.getHealth()),x,y);
     }
   }
   
@@ -200,11 +202,11 @@ public class bigSkull extends Enemy{
     return 300;
   }
   public int getDamage(){
-    return 25;
+    return 32;
   }
   
   public void respawn(){ // Don't use
-    setHealth(200);
+    setHealth(600);
     setPosition(random(54,width-54),-random(-54,-300));
   }
 }
@@ -237,6 +239,7 @@ public class smallSkull extends Enemy{
   // Move
   void move(){
     if(this.y < 850){
+      x += cos(y)*18;
       y += speedY;
     }else{
       this.setHealth(0);
@@ -260,5 +263,116 @@ public class smallSkull extends Enemy{
   public void respawn(float x, float y){
     setHealth(15);
     setPosition(x,y);
+  }
+}
+
+//////////////////////// ufo (enemy) ////////////////////////////
+public class Ufo extends Enemy{
+  
+  boolean right;
+  
+  LaserUfo ammo[]; // Enemy AMMO
+  
+  // Builder
+  public Ufo(){
+    ammo = new LaserUfo[MAX_UFO_LASER];
+    for(int i = 0; i < MAX_UFO_LASER; i++) ammo[i] = new LaserUfo();
+    setHealth(32); // health
+    right = false;
+    x = width/2;
+    y = -300;
+    frame = 0;
+  }
+  
+  void draw(){
+        if(this.getHealth() > 0){
+        move();
+        if(this.getImmuneTime() > 0){
+          if(frameCount%3==0) tint(RED,150);
+          else tint(WHITE,150);
+          image(ufoGIF[frame],x,y,180,160);
+        }
+        textFont(fontDefault);
+        if(debugInfo) text(String.valueOf(this.getHealth()),x,y);
+        image(ufoGIF[frame],x,y,180,160);
+        noTint();
+        
+        frame++;
+        if(frame == 19) frame = 0;
+        if(this.getImmuneTime() >= 1) this.setImmuneTime(getImmuneTime()-1);
+      
+    }
+  }
+  
+  // Move
+  void move(){
+    
+    if(this.x >= width || this.x <= 0) right = !right;
+    this.y += 1;
+    
+    if(right) x += 10;
+    else this.x -= 10;
+    
+    if(frameCount%15==0){
+      for(int i = 0; i < MAX_UFO_LASER; i++){
+        if(ammo[i].getHealth() <= 0){
+          ammo[i].respawn(this.x,this.y);
+          break;
+        }
+      }
+    }
+    for(int i = 0; i < MAX_UFO_LASER; i++) ammo[i].draw();
+    if(y > 850) this.setHealth(0);
+  }
+  
+  // Methods
+  public int getSize(){
+    return 150;
+  }
+  public int getDamage(){
+    return 3;
+  }
+  
+  public void respawn(){ // Don't use
+    setHealth(30);
+    setPosition(random(100,width-100),-random(100,200));
+  }
+}
+
+//////////////////////////////// Laser shots //////////////////////////////////////////
+public class LaserUfo extends GameObject{
+  
+  // Builder
+  public LaserUfo(){
+    super(0);
+  }
+  
+  // Revive lasers
+  public void respawn(float x, float y){
+    this.x = x;
+    this.y = y;
+    setHealth(1);
+  }
+  
+  //Draw the laser
+  public void draw(){
+    if(this.getHealth() > 0){
+      fill(GREEN);
+      rect(x,y,6,40);
+      y += 14;
+      if(y > 820){
+        setHealth(0);
+      }
+      for(int i = 0; i < MAX_UFO_LASER; i++) checkCollision(this,localPlayer);
+    }
+  }
+  
+  // Gets methods
+  public int getSize(){
+    return 16;
+  }
+  
+  public int getDamage(){
+    return 8;
   }
 }

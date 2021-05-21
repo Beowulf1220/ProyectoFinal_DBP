@@ -45,11 +45,13 @@ void drawStage(){
       if(levelCounter > LEVEL_TIME-3) showMessage("Level "+currentLevel);
       else if(currentLevel%3==0 || currentLevel == 10)
       {
-        if(levelCounter > -4 && levelCounter <= 0) showMessage("WARNING!!!\nBoss "+(currentLevel % 3 + 1)+" had came!!!",RED);
+        if(levelCounter > -4 && levelCounter <= -1) showMessage("WARNING!!!\nBoss "+(currentLevel % 3 + 1)+" had came!!!",RED);
         else{
-          if(bigBoss.getHealth() <= 0){
+          if(bigBoss == null || bigBoss.getHealth() <= 0){
             showMessage("Jackpot");
-            if(levelCounter%17==0) gameOver = true;
+            if(levelCounter%17==0){
+              gameOver = true;
+            }
           }
         }
       }
@@ -60,7 +62,8 @@ void drawStage(){
     }
   }
   else if(localPlayer.getLifes() > 0 || localPlayer.getHealth() > 0){ // change the level
-    window = NEXT_LEVEL;
+    if(currentLevel == 10) window = END;
+    else window = NEXT_LEVEL;
     currentLevel++;
   }
   else{
@@ -71,7 +74,6 @@ void drawStage(){
 
 /////////////////////////// initeialize the stage //////////////////////////
 void initStage(){
-  
   if(isCooperativeMode) window = WAITING_ROOM;
   else window = STAGE;
   gameOver = false;
@@ -100,7 +102,11 @@ void initStage(){
   enemies = new Enemy[MAX_ENEMIES];
   
   for(int i = 0; i < MAX_METEORITES; i++) meteorites[i] = new Meteorite((int)random(32,256),random(1,10));
-  for(int i = 0; i < MAX_ENEMIES; i++) enemies[i] = new Medusa();
+  for(int i = 0; i < MAX_ENEMIES; i++){
+    double ran = random(0,1);
+    if(ran > 0.4) enemies[i] = new Medusa();
+    else enemies[i] = new Ufo();
+  }
   
   // bigBoss
   if(currentLevel == 3) bigBoss = new bigMoon();

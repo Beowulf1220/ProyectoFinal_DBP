@@ -123,18 +123,29 @@ public class CrazyBackground extends Background{
 public class OceanBackground extends Background{
   
   private PImage frames[];
+  private PImage cloud;
   private int frame;
+  private float x,y;
   
   // Builder
   public OceanBackground(){
     frame = 0;
+    x = 100;
+    y = height/2;
     frames = new PImage[10];
+    cloud = loadImage("Resources/Images/enviroment/cloud.png");
     for(int i = 0; i < 10; i ++) frames[i] = loadImage("Resources/Images/enviroment/level_7/frame-"+(i+1)+".gif");
   }
   
   @Override
   void draw(){
-    image(frames[frame],width/2,height/2,width,height);
+    image(frames[frame],width/2,y-height,width,height);
+    image(frames[frame],width/2,y,width,height);
+    image(cloud,x,x);
+    x += 0.04;
+    y+=3;
+    if(y >= 3*height/2) y = height/2;
+    image(cloud,height-x,height-x);
     if(frameCount%3==0) frame++;
     if(frame >= 10) frame = 0;
   }

@@ -32,6 +32,7 @@ public static final int JOIN_ROOM = 7;
 public static final int JOIN_PHONE = 8;
 public static final int GAME_OVER_SCREEN = 9;
 public static final int NEXT_LEVEL = 10;
+public static final int END = 11;
 
 // A few constants
 final color GREEN = color(0,255,0);
@@ -92,8 +93,6 @@ Meteorite meteorites[];
 Enemy enemies[];
 Enemy bigBoss;
 
-//bigBoss
-
 
 // Are we in cooperative mode game?
 boolean isCooperativeMode;
@@ -111,9 +110,12 @@ PImage mineImage; // Missile image
 PImage moonImage;
 PImage bigSkullGIF[];
 PImage smallSkullGIF[];
+PImage ufoGIF[];
 
 PImage hearthImage;
 PImage shieldImage;
+
+ufoWait ufoWaiting;
 
 Health health;
 Shield shield;
@@ -125,6 +127,7 @@ SoundFile explotionSound;
 SoundFile laserSound;
 SoundFile menuSound;
 SoundFile stageSound;
+SoundFile laughSound;
 
 boolean soundEnable;
 
@@ -170,6 +173,7 @@ void setup(){
   explotionSound = new SoundFile(this,"Resources/Sounds/explotion.wav",false);
   laserSound = new SoundFile(this,"Resources/Sounds/shoot.wav",false);
   menuSound = new SoundFile(this,"Resources/Sounds/menu.wav",false);
+  laughSound = new SoundFile(this,"Resources/Sounds/laugh.wav");
   soundEnable = true;
   
   menuSound.amp(0.2);
@@ -231,12 +235,16 @@ void setup(){
     bigSkullGIF[i] = loadImage("Resources/Images/Enemies/bigSkull/frame-"+(i+1)+".gif");
   }
   
+  ufoWaiting = new ufoWait(100,height-150);
+  
   smallSkullGIF = new PImage[11];
   for(int i = 0; i < 11; i++) smallSkullGIF[i] = loadImage("Resources/Images/Enemies/smallSkull/frame-"+(i+1)+".gif");
   
   meduGIF = new PImage[7];
   for(int i = 0; i < 7; i++) meduGIF[i] = loadImage("Resources/Images/Enemies/medu/frame-"+(i+1)+".gif");
   
+  ufoGIF = new PImage[19];
+  for(int i = 0; i < 19; i++) ufoGIF[i] = loadImage("Resources/Images/Enemies/ufo/frame-"+(i+1)+".gif");
   
   //moonImage = new PImage();
   moonImage = loadImage("Resources/Images/Enemies/bigMoon/moon.png");
@@ -281,6 +289,9 @@ void draw(){
        break;
      case NEXT_LEVEL:
        nextLevel();
+       break;
+     case END:
+       drawEnd();
        break;
      default:
        text("Error: window not found!",width/2,height/2);
