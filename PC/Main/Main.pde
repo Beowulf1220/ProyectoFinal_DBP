@@ -6,14 +6,13 @@
   Requires to run it:
   > Sound library.
   > oscP5 library.
+  > P5ireBase library
   
   Task remaining:
-  > add more enemies
-  > add the bosses
-  > add firebase conection
   > add ardunio conection
 */
-
+import javax.swing.JOptionPane;
+import P5ireBase.library.*;
 import processing.sound.*;
 import oscP5.*;
 import netP5.*;
@@ -42,6 +41,9 @@ final color LIGHT_BLUE = color(81,209,246);
 final color YELLOW = color(255,255,0);
 final color WHITE = color(255);
 final color BLACK = color(0);
+
+//Firebase
+P5ireBase fireBase;
 
 int window;
 boolean gameOver;
@@ -152,6 +154,9 @@ void setup(){
   smooth(4);
   starsBackground = new StarsBackground();
   pause = false;
+  
+  fireBase = new P5ireBase(this, "https://vue-todo-2021-febec-default-rtdb.firebaseio.com/"); // Firebase
+  fireBase.getValue("Game/Profiles");
   
   levelCounter = 0;
   gameOver = false;

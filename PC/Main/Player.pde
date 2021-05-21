@@ -4,6 +4,7 @@ public class Player extends GameObject {
   // Attributes
   private String name; // User name
   private int score;  // Current score
+  private int save;
   private int highestScore;
   private int playerNumber;
 
@@ -21,8 +22,12 @@ public class Player extends GameObject {
   int shotDelay;
 
   // Builder
-  public Player(String name, int highestScore, int save, int playerNumber) {
+  public Player(String name, int save, int score, int highestScore, int playerNumber) {
     super(100);
+
+    this.save = save;
+    this.highestScore = highestScore;
+    this.score = score;
 
     lifes = 3;
     shield = 0;

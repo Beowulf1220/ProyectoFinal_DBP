@@ -62,7 +62,30 @@ void drawStage() {
   } else {
     window = GAME_OVER_SCREEN;
     restartStage();
+    saveData();
   }
+}
+
+/////////////////////////// save the data //////////////////////////////////
+void saveData(){
+  String data = fireBase.getValue("Game/Profiles/"+playerName);
+  
+  String save = "", score = "";
+  
+  // Save
+  for(int i = 0; i < data.length(); i++){
+    if(data.charAt(i) == ',') break;
+    if(Character.isDigit(data.charAt(i))) save += data.charAt(i);
+  }
+  
+  // Score
+  for(int i = data.length()-1; i >= 0; i--){
+    if(data.charAt(i) == ',') break;
+    if(Character.isDigit(data.charAt(i))) score += data.charAt(i);
+  }
+  
+  if(Integer.parseInt(save) < currentLevel) fireBase.setValue("Game/Profiles/"+playerName+"/save",String.valueOf(currentLevel)); // save
+  if(Integer.parseInt(score) < localPlayer.getScore()) fireBase.setValue("Game/Profiles/"+playerName+"/score",String.valueOf(localPlayer.getScore())); // highestScore
 }
 
 /////////////////////////// initeialize the stage //////////////////////////
