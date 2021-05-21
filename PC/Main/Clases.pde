@@ -4,8 +4,9 @@ static final int MAX_MISSILE = 2;
 
 final int MAX_METEORITES = 4;
 final int MAX_ENEMIES = 6;
+final int MAX_SMALL_SKULL = 8;
 
-static final int LEVEL_TIME = 10; // 2 minutes and 40 seconds
+static final int LEVEL_TIME = 160; // 2 minutes and 40 seconds
 
 // All objects must to be child from this class
 public abstract class GameObject{

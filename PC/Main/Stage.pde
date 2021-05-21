@@ -104,6 +104,8 @@ void initStage(){
   
   // bigBoss
   if(currentLevel == 3) bigBoss = new bigMoon();
+  else if(currentLevel == 6) bigBoss = new bigSkull();
+  else bigBoss = null;
 }
 
 ////////////////////// Level transition /////////////////////////////////

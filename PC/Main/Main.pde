@@ -109,6 +109,9 @@ PImage explotionGIF[];
 PImage mineImage; // Missile image
 
 PImage moonImage;
+PImage bigSkullGIF[];
+PImage smallSkullGIF[];
+
 PImage hearthImage;
 PImage shieldImage;
 
@@ -222,10 +225,18 @@ void setup(){
   for(int i = 0; i < 20; i++) meteoriteGIF[i] = loadImage("Resources/Images/meteorite/frame-"+(i+1)+".gif");
   
   explotionGIF = new PImage[8];
-  for(int i = 0; i < 8; i++) explotionGIF[i] = loadImage("Resources/Images/effects/explotion/frame-0"+(i+1)+".gif");
+  bigSkullGIF = new PImage[8];
+  for(int i = 0; i < 8; i++){
+    explotionGIF[i] = loadImage("Resources/Images/effects/explotion/frame-0"+(i+1)+".gif");
+    bigSkullGIF[i] = loadImage("Resources/Images/Enemies/bigSkull/frame-"+(i+1)+".gif");
+  }
+  
+  smallSkullGIF = new PImage[11];
+  for(int i = 0; i < 11; i++) smallSkullGIF[i] = loadImage("Resources/Images/Enemies/smallSkull/frame-"+(i+1)+".gif");
   
   meduGIF = new PImage[7];
   for(int i = 0; i < 7; i++) meduGIF[i] = loadImage("Resources/Images/Enemies/medu/frame-"+(i+1)+".gif");
+  
   
   //moonImage = new PImage();
   moonImage = loadImage("Resources/Images/Enemies/bigMoon/moon.png");
