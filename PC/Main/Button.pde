@@ -42,6 +42,19 @@ public class Button {
     textFont(fontButton);
     text(text, positionX, positionY+16);
   }
+  
+  void drawButtonX(color col) {
+    // This draw a button with a border
+    fill(col);
+    rect(positionX, positionY, sizeX, sizeY, 5);
+    fill(0);
+    rect(positionX, positionY, sizeX-4, sizeY-4, 5);
+
+    // Button's text
+    fill(col);
+    textFont(fontButton);
+    text(text, positionX, positionY+16);
+  }
 
   void drawButton(int textSize) {
     // This draw a button with a border

@@ -46,6 +46,7 @@ final color LIGHT_BLUE = color(81, 209, 246);
 final color YELLOW = color(255, 255, 0);
 final color WHITE = color(255);
 final color BLACK = color(0);
+final color SILVER = color(192,192,192);
 
 //Firebase
 P5ireBase fireBase;

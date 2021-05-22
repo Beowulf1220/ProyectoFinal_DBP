@@ -37,7 +37,7 @@ public class Player extends GameObject {
     lasers = new Laser[MAX_AMMO];
     missiles = new Missile[MAX_MISSILE];
     for (int i = 0; i < MAX_AMMO; i++) lasers[i] = new Laser();
-    for (int i = 0; i < MAX_MISSILE; i++) missiles[i] = new Missile();
+    for (int i = 0; i < MAX_MISSILE; i++) missiles[i] = new Missile(this);
 
     if (playerNumber == 1) // PLayer 1 sprite
     {
@@ -92,8 +92,8 @@ public class Player extends GameObject {
   public int getScore() {
     return score;
   }
-  
-  public int getSave(){
+
+  public int getSave() {
     return save;
   }
 
@@ -239,11 +239,16 @@ void playerInerface() {
     "    Health:"+localPlayer.getHealth()+
     "    Shield:"+localPlayer.getShield()+
     "    Score:"+localPlayer.getScore(), 0, 12);
+  if (isCooperativeMode && otherPlayer != null) {
+    fill(RED, 200);
+    text("Player"+localPlayer.getPlayerNumber()+": "+otherPlayer.getName()+
+      "    Lifes:"+otherPlayer.getLifes()+
+      "    Health:"+otherPlayer.getHealth()+
+      "    Shield:"+otherPlayer.getShield()+
+      "    Score:"+otherPlayer.getScore(), 0, 12);
+  }
   textAlign(RIGHT);
   if (levelCounter >= 0) text("Time remaining to arrvie:"+levelCounter, width, 12);
-  if (isCooperativeMode) {
-    // another one player ...
-  }
 }
 
 //////////////////////////////// Laser shots //////////////////////////////////////////
@@ -296,9 +301,12 @@ public class Laser extends GameObject {
 //////////////////////////////// Missile shoots //////////////////////////////////////////
 public class Missile extends GameObject {
 
+  Player player;
+
   //Builder
-  public Missile() {
+  public Missile(Player player) {
     super(0);
+    this.player = player;
   }
 
   // Revive missiles
@@ -318,9 +326,9 @@ public class Missile extends GameObject {
         setHealth(0);
       }
       // Check for missile collisions
-      for (int i = 0; i < MAX_METEORITES; i++) checkCollision(this, meteorites[i]);
-      for (int i = 0; i < MAX_ENEMIES; i++) checkCollision(this, enemies[i]);
-      if (bigBoss != null) checkCollision(this, bigBoss);
+      for (int i = 0; i < MAX_METEORITES; i++) checkCollision(this, meteorites[i], player);
+      for (int i = 0; i < MAX_ENEMIES; i++) checkCollision(this, enemies[i], player);
+      if (bigBoss != null) checkCollision(this, bigBoss, player);
     }
   }
 

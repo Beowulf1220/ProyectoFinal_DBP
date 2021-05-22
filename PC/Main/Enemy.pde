@@ -350,6 +350,9 @@ public class Ufo extends Enemy {
     }
     for (int i = 0; i < MAX_UFO_LASER; i++) ammo[i].draw();
     if (y > 850) this.setHealth(0);
+    if(this.getHealth() <= 0){
+      for (int i = 0; i < MAX_UFO_LASER; i++) ammo[i].setHealth(0);
+    }
   }
 
   // Methods
@@ -400,7 +403,7 @@ public class LaserUfo extends GameObject {
   }
 
   public int getDamage() {
-    return 8;
+    return 6;
   }
 }
 

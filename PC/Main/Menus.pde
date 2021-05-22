@@ -163,7 +163,10 @@ void drawLevelMenu() {
   fill(WHITE);
   text("Select a Level", width/2, height/6);
 
-  for (int i = 0; i < 10; i++) levelButton[i].drawButton();
+  for (int i = 0; i < 10; i++){
+    if(i < localPlayer.getSave()) levelButton[i].drawButton();
+    else levelButton[i].drawButtonX(SILVER);
+  }
   backButton.drawButton();
 }
 
@@ -433,6 +436,7 @@ void mousePressed() {
   } else if (window == LEVEL_MENU) {
     // Check for every level button
     for (int i = 0; i < 10; i++) {
+      if(i >= localPlayer.getSave()) break;
       if (levelButton[i].isPressed() && localPlayer != null) {
         currentLevel = i+1;
         if (isCooperativeMode) window = WAITING_ROOM;
@@ -469,4 +473,6 @@ void debugInfo() {
   text("laser: "+laser, 0, 132);
   text("level counter: "+levelCounter, 0, 144);
   text("Coop: "+isCooperativeMode, 0, 156);
+  text("poneX: "+localX, 0, 168);
+  text("phoneY: "+localY,0, 180);
 }
