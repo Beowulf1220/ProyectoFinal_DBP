@@ -92,6 +92,10 @@ public class Player extends GameObject {
   public int getScore() {
     return score;
   }
+  
+  public int getSave(){
+    return save;
+  }
 
   public int getPlayerNumber() {
     return playerNumber;

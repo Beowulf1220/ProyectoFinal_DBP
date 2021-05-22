@@ -215,6 +215,8 @@ void drawJoinRoom() {
   text("Press ENTER to continue", width/2, height/3+40);
 
   backButton.drawButton();
+
+  if (remoteAddress.length() > 8) joinGame();
 }
 
 ///////////////////////// End game /////////////////////////
@@ -247,77 +249,78 @@ void keyPressed() {
 
           // LOGIN
           String data = null;
-          if(fireBase != null) data = fireBase.getValue("Game/Profiles");
+          if (fireBase != null) data = fireBase.getValue("Game/Profiles");
           else return;
-          if(data == null) return;
-          
+          if (data == null) return;
+
           boolean isHere = false;
           String saveS = "";
           String highestScoreS = "";
           String name = "";
-          
+
           boolean nameB = false;
           boolean highestScoreB = false;
           boolean saveB = false;
-          
-          for(int i = 1; i < data.length()-1; i++){ // Here we clean the data, example: {Car={score=0, save=1}, Edw={score=0, save=1}, Ed={score=0, save=1}}
-            if(!nameB){ // Get name
-              if(data.charAt(i) != ' ') name+= data.charAt(i);
-              if(data.charAt(i+1) == '='){
+
+          for (int i = 1; i < data.length()-1; i++) { // Here we clean the data, example: {Car={score=0, save=1}, Edw={score=0, save=1}, Ed={score=0, save=1}}
+            if (!nameB) { // Get name
+              if (data.charAt(i) != ' ') name+= data.charAt(i);
+              if (data.charAt(i+1) == '=') {
                 nameB = true;
                 i++;
               }
             }
-            if(!highestScoreB && nameB){
-              if(Character.isDigit(data.charAt(i))) highestScoreS += data.charAt(i); // Get Score
-              if(data.charAt(i+1) == ','){
+            if (!highestScoreB && nameB) {
+              if (Character.isDigit(data.charAt(i))) highestScoreS += data.charAt(i); // Get Score
+              if (data.charAt(i+1) == ',') {
                 highestScoreB = true;
                 i++;
               }
             }
-            if(!saveB && nameB && highestScoreB){
-              if(Character.isDigit(data.charAt(i))) saveS += data.charAt(i); // Get Score
-              if(data.charAt(i+1) == '}'){
+            if (!saveB && nameB && highestScoreB) {
+              if (Character.isDigit(data.charAt(i))) saveS += data.charAt(i); // Get Score
+              if (data.charAt(i+1) == '}') {
                 saveB = true;
                 i+=2;
               }
             }
-            if(nameB && highestScoreB && saveB){
+            if (nameB && highestScoreB && saveB) {
               //println("Name:"+name+"\nscore:"+highestScoreS+"\nsave:"+saveS);
-              if(playerName.equals(name)){
+              if (playerName.equals(name)) {
                 isHere = true;
                 break;
-              }else{
+              } else {
                 saveS = "";
                 highestScoreS = "";
                 name = "";
-                
+
                 nameB = false;
                 highestScoreB = false;
                 saveB = false;
               }
             }
           }
-          
+
           // If the profile is here
           if (isHere) {
             //println("Here");
             int save = Integer.parseInt(saveS);
             int highestScore = Integer.parseInt(highestScoreS);
-            localPlayer = new Player(playerName, 0, highestScore, save, 1);
+            localPlayer = new Player(playerName, save, 0, highestScore, 1); //public Player(String name, int save, int score, int highestScore, int playerNumber)
             window = JOIN_PHONE;
-          }else{
-            int res = JOptionPane.showConfirmDialog(null,"The profile \""+playerName+"\" doesn't esist, do you want to create it?","Warning",JOptionPane.YES_NO_OPTION);
-            if(res == JOptionPane.YES_OPTION){
-              fireBase.setValue("Game/Profiles/"+playerName+"/save","1"); // save
-              fireBase.setValue("Game/Profiles/"+playerName+"/score","0"); // highestScore
+          } else {
+            int res = JOptionPane.showConfirmDialog(null, "The profile \""+playerName+"\" doesn't esist, do you want to create it?", "Warning", JOptionPane.YES_NO_OPTION);
+            if (res == JOptionPane.YES_OPTION) {
+              fireBase.setValue("Game/Profiles/"+playerName+"/save", "1"); // save
+              fireBase.setValue("Game/Profiles/"+playerName+"/score", "0"); // highestScore
               JOptionPane.showMessageDialog(null, "Profile created!");
             }
           }
         }
         clickSound.play();
       } else if (remoteAddress.length() > 0 && window == JOIN_ROOM) {
-        // ...
+        joinGame();
+        clickSound.play();
       } else if (phoneAddress.length() > 0 && window == JOIN_PHONE) { // This wouldn't must to use, if phoneConection works.
         phoneConection();
         clickSound.play();
@@ -440,6 +443,7 @@ void mousePressed() {
   } else if (joinButton.isPressed() && window == SELECT_ROL_MENU) {
     window = JOIN_ROOM;
     isCooperativeMode = true;
+    localPlayer.setPlayerNumber(2);
   }
 }
 
@@ -464,4 +468,5 @@ void debugInfo() {
   text("missile: "+missile, 0, 120);
   text("laser: "+laser, 0, 132);
   text("level counter: "+levelCounter, 0, 144);
+  text("Coop: "+isCooperativeMode, 0, 156);
 }

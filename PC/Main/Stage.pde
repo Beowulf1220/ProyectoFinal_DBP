@@ -55,6 +55,7 @@ void drawStage() {
     } else { // Show pause menu
       pauseMenu();
     }
+    if (puerto.available() > 0) puerto.write(localPlayer.getScore()); // Send the score to arduino
   } else if (localPlayer.getLifes() > 0 || localPlayer.getHealth() > 0) { // change the level
     currentLevel++;
     if (currentLevel == 11) window = END;
@@ -67,25 +68,25 @@ void drawStage() {
 }
 
 /////////////////////////// save the data //////////////////////////////////
-void saveData(){
+void saveData() {
   String data = fireBase.getValue("Game/Profiles/"+playerName);
-  
+
   String save = "", score = "";
-  
+
   // Save
-  for(int i = 0; i < data.length(); i++){
-    if(data.charAt(i) == ',') break;
-    if(Character.isDigit(data.charAt(i))) save += data.charAt(i);
+  for (int i = 0; i < data.length(); i++) {
+    if (data.charAt(i) == ',') break;
+    if (Character.isDigit(data.charAt(i))) save += data.charAt(i);
   }
-  
+
   // Score
-  for(int i = data.length()-1; i >= 0; i--){
-    if(data.charAt(i) == ',') break;
-    if(Character.isDigit(data.charAt(i))) score += data.charAt(i);
+  for (int i = data.length()-1; i >= 0; i--) {
+    if (data.charAt(i) == ',') break;
+    if (Character.isDigit(data.charAt(i))) score += data.charAt(i);
   }
-  
-  if(Integer.parseInt(save) < currentLevel) fireBase.setValue("Game/Profiles/"+playerName+"/save",String.valueOf(currentLevel)); // save
-  if(Integer.parseInt(score) < localPlayer.getScore()) fireBase.setValue("Game/Profiles/"+playerName+"/score",String.valueOf(localPlayer.getScore())); // highestScore
+
+  if (Integer.parseInt(save) < currentLevel) fireBase.setValue("Game/Profiles/"+playerName+"/save", String.valueOf(currentLevel)); // save
+  if (Integer.parseInt(score) < localPlayer.getScore()) fireBase.setValue("Game/Profiles/"+playerName+"/score", String.valueOf(localPlayer.getScore())); // highestScore
 }
 
 /////////////////////////// initeialize the stage //////////////////////////
