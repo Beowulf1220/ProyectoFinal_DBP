@@ -116,11 +116,11 @@ public class Player extends GameObject {
   }
 
   // Intersting methods
-  void drawPlayer() {
+  void drawPlayer(float movX, float movY) {
     if (getHealth() > 0) {  // alive
       if (getHealth() > 100) setHealth(100);
       if (getShield() > 100) setShield(100);
-      move(localX, localY);
+      move(movX, movY);
       avatarFrame++;
       if (avatarFrame >= 2) avatarFrame = 0;
       if (laser && shotDelay > 10) {
@@ -241,7 +241,7 @@ void playerInerface() {
     "    Score:"+localPlayer.getScore(), 0, 12);
   if (isCooperativeMode && otherPlayer != null) {
     fill(RED, 200);
-    text("Player"+localPlayer.getPlayerNumber()+": "+otherPlayer.getName()+
+    text("Player"+otherPlayer.getPlayerNumber()+": "+otherPlayer.getName()+
       "    Lifes:"+otherPlayer.getLifes()+
       "    Health:"+otherPlayer.getHealth()+
       "    Shield:"+otherPlayer.getShield()+

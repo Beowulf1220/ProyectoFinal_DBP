@@ -312,7 +312,7 @@ void keyPressed() {
             localPlayer = new Player(playerName, save, 0, highestScore, 1); //public Player(String name, int save, int score, int highestScore, int playerNumber)
             window = JOIN_PHONE;
           } else {
-            int res = JOptionPane.showConfirmDialog(null, "The profile \""+playerName+"\" doesn't esist, do you want to create it?", "Warning", JOptionPane.YES_NO_OPTION);
+            int res = JOptionPane.showConfirmDialog(null, "The profile \""+playerName+"\" doesn't esist!\nDo you want to create it?", "Wait", JOptionPane.YES_NO_OPTION);
             if (res == JOptionPane.YES_OPTION) {
               fireBase.setValue("Game/Profiles/"+playerName+"/save", "1"); // save
               fireBase.setValue("Game/Profiles/"+playerName+"/score", "0"); // highestScore

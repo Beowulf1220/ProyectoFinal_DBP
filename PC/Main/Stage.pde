@@ -12,8 +12,8 @@ void drawStage() {
         starsBackground.draw();
         fill(BLACK, 220);
         if (currentLevel == 3 && levelCounter > -5) {
-          image(moonImage, 80, 80, levelCounter+20, levelCounter+20);
-          ellipse(80, 80, levelCounter+20, levelCounter+20);
+          image(moonImage, 80, 80, levelCounter*4, levelCounter*4);
+          ellipse(80, 80, levelCounter*4, levelCounter*4);
         } else if (currentLevel == 1 || currentLevel == 2) { // level 4-10
           image(moonImage, 80, 80, 128, 128);
           ellipse(80, 80, 128, 128);
@@ -21,21 +21,26 @@ void drawStage() {
       } else {
         stageBackground.draw();
       }
-      if (levelCounter < -5 && bigBoss != null) {
-        bigBoss.draw();
-      }
+      
+      // Draw the boss
+      if (levelCounter < -5 && bigBoss != null) bigBoss.draw();
 
-      if (debugInfo) debugInfo();
-
-      // Draw
-      localPlayer.drawPlayer();
+      // Draw player(s)
+      localPlayer.drawPlayer(localX,localY);
+      if(isCooperativeMode && otherPlayer != null) otherPlayer.drawPlayer(outerX,outerY);
+      
+      // Draw enemies
       drawEnemies();
-
+      
       // Support
       health.draw();
       shield.draw();
+      
+      if(isCooperativeMode && otherPlayer != null && localPlayer.getPlayerNumber() == 1) sendData(); // send the game satate to 2nd player
 
+      // Draw info
       playerInerface();
+      if (debugInfo) debugInfo();
 
       // Level messages
       if (levelCounter > LEVEL_TIME-3) showMessage("Level "+currentLevel);
@@ -67,7 +72,24 @@ void drawStage() {
   }
 }
 
-/////////////////////////// save the data //////////////////////////////////
+/////////////////////////// send the stage data for the 2nd player //////////////////////////
+void sendData(){ // This function is for the host
+  
+  OscMessage myMessage = new OscMessage("gameState"); // Message (game state)
+
+  // Player 1 info
+  if (missile) myMessage.add("true"); // Misslie button    value  0
+  else myMessage.add("false");
+  if (pause) myMessage.add("true"); // Ready button        value  1
+  else myMessage.add("false");
+  if (laser) myMessage.add("true"); // Laser button        value  2
+  else myMessage.add("false");
+
+  myMessage.add(localX); // Host X info                    value  3
+  myMessage.add(localY); // Host Y info                    value  4
+}
+
+/////////////////////////// save the data to firebase //////////////////////////////////
 void saveData() {
   String data = fireBase.getValue("Game/Profiles/"+playerName);
 

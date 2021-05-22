@@ -8,8 +8,6 @@
  > oscP5 library.
  > P5ireBase library
  
- Task remaining:
- > add ardunio conection
  */
 import javax.swing.JOptionPane;
 import P5ireBase.library.*;
@@ -387,8 +385,28 @@ void oscEvent(OscMessage theOscMessage) {
     outerY = theOscMessage.get(5).floatValue()*2; // X sensor (Android)
 
     window = STAGE;
-  } else if (theOscMessage.checkAddrPattern("stageInfo")) {
+  } else if (theOscMessage.checkAddrPattern("gameState")) { // fetch the stage data from the 1st player (invited)
+    
     window = STAGE;
+
+    if (theOscMessage.get(1).stringValue().equals("true")) { // missile button (Android)
+      outerMissile = true;
+    } else {
+      outerMissile = false;
+    }
+    if (theOscMessage.get(2).stringValue().equals("true")) { // ready button (Android)
+      outerPause = true;
+    } else {
+      outerPause = false;
+    }
+    if (theOscMessage.get(3).stringValue().equals("true")) { // laser button (Android)
+      outerLaser = true;
+    } else {
+      outerLaser = false;
+    }
+
+    outerX = theOscMessage.get(4).floatValue()*2; // Y sensor (Android)
+    outerY = theOscMessage.get(5).floatValue()*2; // X sensor (Android)
   }
 }
 
@@ -417,5 +435,5 @@ void joinGame() {
    > 4 : X sensor
    */
 
-  println("Sending data to PC: "+remoteAddress);
+  //println("Sending data to PC: "+remoteAddress);
 }
