@@ -18,6 +18,7 @@ import netP5.*;
 
 // Arduino
 Serial puerto;
+SerialConnection serialConnection;
 
 // Fonts
 PFont fontMenu, fontButton, fontInfo, fontDefault, fontSpecial, fontInterface;
@@ -163,9 +164,8 @@ void setup() {
   smooth(4);
   starsBackground = new StarsBackground();
   pause = false;
-
-  String portName = Serial.list()[0];
-  puerto = new Serial(this, portName, 9600);
+  
+  serialConnection = new SerialConnection(this,9600);
 
   fireBase = new P5ireBase(this, "https://vue-todo-2021-febec-default-rtdb.firebaseio.com/"); // Firebase
   fireBase.getValue("Game/Profiles");
@@ -293,6 +293,12 @@ void setup() {
 
 //Draw
 void draw() {
+  serialConnection.startSerialCommunication();
+  if(serialConnection.isReady){ // Cheack for ardunio conection
+    String portName = Serial.list()[0];
+    puerto = new Serial(this, portName, 9600);
+  }
+  
   switch(window) {
   case MAIN_MENU:
     drawMainMenu();
