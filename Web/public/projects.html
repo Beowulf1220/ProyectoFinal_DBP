@@ -1,0 +1,75 @@
+<!doctype html>
+<html>
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Space odissey</title>
+	<link rel="stylesheet" href="css/style.csS" type="text/css">
+	<script defer src="/__/firebase/6.0.2/firebase-app.js"></script>
+    <script defer src="/__/firebase/6.0.2/firebase-auth.js"></script>
+    <script defer src="/__/firebase/6.0.2/firebase-database.js"></script>
+    <script defer src="/__/firebase/6.0.2/firebase-messaging.js"></script>
+    <script defer src="/__/firebase/6.0.2/firebase-storage.js"></script>
+    <script defer src="/__/firebase/init.js"></script>
+</head>
+<body>
+	<div id="page">
+		<div id="header">
+			<div>
+				<a href="index.html" class="logo"><img src="images/logo.pnG"></a>
+				<ul id="navigation">
+					<li>
+						<a href="about.html">Home</a>
+					</li>
+					<li class="menu selected">
+						<a href="projects.html">Ranking</a>
+					</li>
+				</ul>
+			</div>
+		</div>
+		<div id="body" class="ranking">
+			<div class="header">
+				<div>
+					<h1>Space Odissey Ranking</h1>
+					<ul>
+						<li>
+							<div>
+								<h1>1.- EDWIN PINEDO</h1>
+								<h2>999,999</h2>
+							</div>
+						</li>
+						<li>
+							<div>
+								<h1>2.- <span id="Name"></span></h1>
+								<h2>Puntos: <span id="Score"></span><br> Avance: <span id="Pro"></span></h2>
+							</div>
+						</li>
+					</ul>
+				</div>
+			</div>
+		</div>
+		<div id="footer">
+			<div class="footnote">
+				<div>
+					<p>&copy; 2021 BY EDWIN & ARNOLDO | ALL RIGHTS RESERVED</p>
+				</div>
+			</div>
+		</div>
+	</div>
+	<script src="https://www.gstatic.com/firebasejs/5.5.3/firebase.js"></script>
+	<script>
+	  var config = {
+		apiKey: "AIzaSyCSxK-WgXjuw7z2dKZ29vqWYO9j2W1fqXs",
+	  authDomain: "temp-d9810.firebaseapp.com",
+	  databaseURL: "https://temp-d9810-default-rtdb.firebaseio.com",
+	  projectId: "temp-d9810",
+	  storageBucket: "temp-d9810.appspot.com",
+	  messagingSenderId: "591069168176",
+	  appId: "1:591069168176:web:ab602e7d7b2ff73e3223f5",
+	  measurementId: "G-K9HWH65D26"
+	  };
+	  firebase.initializeApp(config);
+	</script>
+	<script src="js/ranking.js"></script>
+</body>
+</html>
