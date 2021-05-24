@@ -49,6 +49,7 @@ final color SILVER = color(192,192,192);
 
 //Firebase
 P5ireBase fireBase;
+int playerNumber;
 
 int window;
 boolean gameOver;
@@ -164,6 +165,7 @@ void setup() {
   smooth(4);
   starsBackground = new StarsBackground();
   pause = false;
+  playerNumber = 1;
   
   serialConnection = new SerialConnection(this,9600);
 

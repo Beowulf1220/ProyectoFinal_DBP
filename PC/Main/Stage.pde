@@ -60,7 +60,7 @@ void drawStage() {
     } else { // Show pause menu
       pauseMenu();
     }
-    if (puerto.available() > 0) puerto.write(localPlayer.getScore()); // Send the score to arduino
+    if (puerto != null && puerto.available() > 0) puerto.write(localPlayer.getScore()); // Send the score to arduino
   } else if (localPlayer.getLifes() > 0 || localPlayer.getHealth() > 0) { // change the level
     currentLevel++;
     if (currentLevel == 11) window = END;
@@ -91,24 +91,40 @@ void sendData(){ // This function is for the host
 
 /////////////////////////// save the data to firebase //////////////////////////////////
 void saveData() {
-  String data = fireBase.getValue("Game/Profiles/"+playerName);
+  String data = fireBase.getValue("Game/Profiles/");
 
   String save = "", score = "";
-
-  // Save
-  for (int i = 0; i < data.length(); i++) {
-    if (data.charAt(i) == ',') break;
-    if (Character.isDigit(data.charAt(i))) save += data.charAt(i);
+  int i = 0,profile = 0;
+  
+  for(; i < data.length() ; i++){
+    if(profile == playerNumber) break;
+    if(data.charAt(i) == '{') profile++;
   }
-
+  i++;
+  
   // Score
-  for (int i = data.length()-1; i >= 0; i--) {
+  for (; i < data.length(); i++) {
     if (data.charAt(i) == ',') break;
     if (Character.isDigit(data.charAt(i))) score += data.charAt(i);
   }
+  i++;
 
-  if (Integer.parseInt(save) < currentLevel) fireBase.setValue("Game/Profiles/"+playerName+"/save", String.valueOf(currentLevel)); // save
-  if (Integer.parseInt(score) < localPlayer.getScore()) fireBase.setValue("Game/Profiles/"+playerName+"/score", String.valueOf(localPlayer.getScore())); // highestScore
+  while(data.charAt(i) != ',') i++;// omite the name
+  i++;
+
+  // Save
+  for (; i < data.length(); i++) {
+    if (data.charAt(i) == '}') break;
+    if (Character.isDigit(data.charAt(i))) save += data.charAt(i);
+  }
+  i++;
+  
+  //println("> data: "+data);
+  //println("> score: "+score);
+  //println("> save: "+save);
+  
+  if (Integer.parseInt(save) < currentLevel) fireBase.setValue("Game/Profiles/"+playerNumber+"/save", String.valueOf(currentLevel)); // save
+  if (Integer.parseInt(score) < localPlayer.getScore()) fireBase.setValue("Game/Profiles/"+playerNumber+"/score", String.valueOf(localPlayer.getScore())); // highestScore
 }
 
 /////////////////////////// initeialize the stage //////////////////////////
@@ -126,7 +142,10 @@ void initStage() {
   } else {
     stageBackground = new MadnessBackground();
   }
-
+  
+  localPlayer.setSave(currentLevel);
+  
+  // Revive all enemies
   for (int i = 0; i < MAX_METEORITES; i++) meteorites[i].revive();
   for (int i = 0; i < MAX_ENEMIES; i++) {
     double ran = random(0, 1);
@@ -140,6 +159,7 @@ void initStage() {
   else if (currentLevel == 9) bigBoss = new BigMedusa();
   else if (currentLevel == 10) bigBoss = new BigBrain();
   else bigBoss = null;
+  saveData();
   System.gc();
 }
 

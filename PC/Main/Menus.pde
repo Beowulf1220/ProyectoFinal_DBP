@@ -257,30 +257,40 @@ void keyPressed() {
           if (data == null) return;
 
           boolean isHere = false;
+          int profile = 1;
           String saveS = "";
           String highestScoreS = "";
           String name = "";
 
+          boolean start = false;
           boolean nameB = false;
           boolean highestScoreB = false;
           boolean saveB = false;
 
           for (int i = 1; i < data.length()-1; i++) { // Here we clean the data, example: {Car={score=0, save=1}, Edw={score=0, save=1}, Ed={score=0, save=1}}
-            if (!nameB) { // Get name
-              if (data.charAt(i) != ' ') name+= data.charAt(i);
-              if (data.charAt(i+1) == '=') {
-                nameB = true;
+            if(!start){
+              if(data.charAt(i) == '='){
+                start = true;
                 i++;
               }
             }
-            if (!highestScoreB && nameB) {
+            if (!highestScoreB && start) {
               if (Character.isDigit(data.charAt(i))) highestScoreS += data.charAt(i); // Get Score
               if (data.charAt(i+1) == ',') {
                 highestScoreB = true;
                 i++;
+                start = false;
               }
             }
-            if (!saveB && nameB && highestScoreB) {
+            if (!nameB && highestScoreB && start) { // Get name
+              if (data.charAt(i) != ',') name+= data.charAt(i);
+              else {
+                nameB = true;
+                i++;
+                start = false;
+              }
+            }
+            if (!saveB && nameB && start) {
               if (Character.isDigit(data.charAt(i))) saveS += data.charAt(i); // Get Score
               if (data.charAt(i+1) == '}') {
                 saveB = true;
@@ -293,10 +303,12 @@ void keyPressed() {
                 isHere = true;
                 break;
               } else {
+                profile++;
                 saveS = "";
                 highestScoreS = "";
                 name = "";
 
+                start = false;
                 nameB = false;
                 highestScoreB = false;
                 saveB = false;
@@ -307,6 +319,7 @@ void keyPressed() {
           // If the profile is here
           if (isHere) {
             //println("Here");
+            playerNumber = profile;
             int save = Integer.parseInt(saveS);
             int highestScore = Integer.parseInt(highestScoreS);
             localPlayer = new Player(playerName, save, 0, highestScore, 1); //public Player(String name, int save, int score, int highestScore, int playerNumber)
@@ -314,8 +327,10 @@ void keyPressed() {
           } else {
             int res = JOptionPane.showConfirmDialog(null, "The profile \""+playerName+"\" doesn't esist!\nDo you want to create it?", "Wait", JOptionPane.YES_NO_OPTION);
             if (res == JOptionPane.YES_OPTION) {
-              fireBase.setValue("Game/Profiles/"+playerName+"/save", "1"); // save
-              fireBase.setValue("Game/Profiles/"+playerName+"/score", "0"); // highestScore
+              playerNumber = profile;
+              fireBase.setValue("Game/Profiles/"+String.valueOf(profile)+"/name", playerName); 
+              fireBase.setValue("Game/Profiles/"+String.valueOf(profile)+"/save", "1"); // save
+              fireBase.setValue("Game/Profiles/"+String.valueOf(profile)+"/score", "0"); // highestScore
               JOptionPane.showMessageDialog(null, "Profile created!");
             }
           }
@@ -475,4 +490,5 @@ void debugInfo() {
   text("Coop: "+isCooperativeMode, 0, 156);
   text("poneX: "+localX, 0, 168);
   text("phoneY: "+localY,0, 180);
+  text("currentLevel: "+currentLevel,0, 192);
 }

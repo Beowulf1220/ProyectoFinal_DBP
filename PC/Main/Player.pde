@@ -75,6 +75,10 @@ public class Player extends GameObject {
   public void setShield(int shield) {
     this.shield = shield;
   }
+  
+  public void setSave(int save){
+    this.save = save;
+  }
 
   // Get methods
   public String getName() {
