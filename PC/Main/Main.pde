@@ -167,6 +167,8 @@ void setup() {
   pause = false;
   playerNumber = 1;
   
+  randomSeed(767);
+  
   serialConnection = new SerialConnection(this,9600);
 
   fireBase = new P5ireBase(this, "https://vue-todo-2021-febec-default-rtdb.firebaseio.com/"); // Firebase
@@ -368,7 +370,7 @@ void oscEvent(OscMessage theOscMessage) {
     }
     localX = theOscMessage.get(5).floatValue()*2; // Y sensor (Android)
     localY = theOscMessage.get(4).floatValue()*2; // X sensor (Android)
-  } else if (theOscMessage.checkAddrPattern("otherPlayer")) // PC host resive PC invited data
+  } else if (theOscMessage.checkAddrPattern("otherPlayer")) // PC host resive PC invited data ////////////////////////
   {
     //println("Resivido");
     remoteAddress = theOscMessage.get(0).stringValue();
@@ -392,10 +394,10 @@ void oscEvent(OscMessage theOscMessage) {
     outerX = theOscMessage.get(4).floatValue()*2; // Y sensor (Android)
     outerY = theOscMessage.get(5).floatValue()*2; // X sensor (Android)
 
-    window = STAGE;
-  } else if (theOscMessage.checkAddrPattern("gameState")) { // fetch the stage data from the 1st player (invited)
+    initStage();
+  } else if (theOscMessage.checkAddrPattern("gameState")) { // fetch the stage data from the 1st player (the host) /////////////////
     
-    window = STAGE;
+    initStage();
 
     if (theOscMessage.get(1).stringValue().equals("true")) { // missile button (Android)
       outerMissile = true;

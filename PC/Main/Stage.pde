@@ -27,7 +27,7 @@ void drawStage() {
 
       // Draw player(s)
       localPlayer.drawPlayer(localX,localY);
-      if(isCooperativeMode && otherPlayer != null) otherPlayer.drawPlayer(outerX,outerY);
+      if(isCooperativeMode && otherPlayer != null) otherPlayer.drawOtherPlayer();
       
       // Draw enemies
       drawEnemies();
@@ -144,6 +144,7 @@ void initStage() {
   }
   
   localPlayer.setSave(currentLevel);
+  if(otherPlayer == null) otherPlayer = new Player("Mate",0,0,0,2);
   
   // Revive all enemies
   for (int i = 0; i < MAX_METEORITES; i++) meteorites[i].revive();

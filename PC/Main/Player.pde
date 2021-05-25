@@ -163,6 +163,14 @@ public class Player extends GameObject {
       }
     }
   }
+  
+  void drawOtherPlayer(){
+    this.x += outerX;
+    this.y += outerY;
+    if(outerLaser) shootLaser();
+    if(outerMissile) shootMissile();
+    pause = outerPause;
+  }
 
   // Shoot laser
   void shootLaser() {
