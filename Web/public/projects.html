@@ -1,16 +1,12 @@
 <!doctype html>
-<html>
+<html lang="es">
 <head>
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<title>Space odissey</title>
-	<link rel="stylesheet" href="css/style.csS" type="text/css">
-	<script defer src="/__/firebase/6.0.2/firebase-app.js"></script>
-	<script defer src="/__/firebase/6.0.2/firebase-auth.js"></script>
-	<script defer src="/__/firebase/6.0.2/firebase-database.js"></script>
-	<script defer src="/__/firebase/6.0.2/firebase-messaging.js"></script>
-	<script defer src="/__/firebase/6.0.2/firebase-storage.js"></script>
-	<script defer src="/__/firebase/init.js"></script>
+	<link rel="stylesheet" href="css/style.cSS" type="text/css">
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+	<script src="https://www.gstatic.com/firebasejs/5.5.3/firebase.js"></script>
 </head>
 <body>
 	<div id="page">
@@ -31,19 +27,7 @@
 			<div class="header">
 				<div>
 					<h1>Space Odissey Ranking</h1>
-					<ul>
-						<li>
-							<div>
-								<h1>1.- EDWIN PINEDO</h1>
-								<h2>999,999</h2>
-							</div>
-						</li>
-						<li>
-							<div>
-								<h1>2.- <span id="Name"></span></h1>
-								<h2>Puntos: <span id="Score"></span><br> Avance: <span id="Pro"></span></h2>
-							</div>
-						</li>
+					<ul id="rank">
 					</ul>
 				</div>
 			</div>
@@ -56,20 +40,19 @@
 			</div>
 		</div>
 	</div>
-	<script src="https://www.gstatic.com/firebasejs/5.5.3/firebase.js"></script>
 	<script>
-		var firebaseConfig = {
-			apiKey: "AIzaSyAYBwDH6VHrNhcYa5EKJB2zlaT8izTulmo",
-			authDomain: "vue-todo-2021-febec.firebaseapp.com",
-			databaseURL: "https://vue-todo-2021-febec-default-rtdb.firebaseio.com",
-			projectId: "vue-todo-2021-febec",
-			storageBucket: "vue-todo-2021-febec.appspot.com",
-			messagingSenderId: "212877263435",
-			appId: "1:212877263435:web:7f586bac06e37880a043ce"
-		};
-
-		firebase.initializeApp(config);
+  	var firebaseConfig = {
+    apiKey: "AIzaSyAYBwDH6VHrNhcYa5EKJB2zlaT8izTulmo",
+    authDomain: "vue-todo-2021-febec.firebaseapp.com",
+    databaseURL: "https://vue-todo-2021-febec-default-rtdb.firebaseio.com",
+    projectId: "vue-todo-2021-febec",
+    storageBucket: "vue-todo-2021-febec.appspot.com",
+    messagingSenderId: "212877263435",
+    appId: "1:212877263435:web:7f586bac06e37880a043ce"
+  };
+  firebase.initializeApp(firebaseConfig);
+</script>
 	</script>
-	<script src="js/ranking.js"></script>
+	<script src="js/rank.js"></script>
 </body>
 </html>
