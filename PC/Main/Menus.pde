@@ -431,6 +431,7 @@ void mousePressed() {
     window = MAIN_MENU;
     saveData();
     remoteAddress = "";
+    isCooperativeMode = false;
     gameOver = false;
     if (stageSound != null) stageSound.stop();
     if (soundEnable && !menuSound.isPlaying()) menuSound.play();

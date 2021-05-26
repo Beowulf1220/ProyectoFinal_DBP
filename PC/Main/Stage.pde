@@ -144,7 +144,8 @@ void initStage() {
   }
   
   localPlayer.setSave(currentLevel);
-  if(otherPlayer == null) otherPlayer = new Player("Mate",0,0,0,2);
+  if(otherPlayer == null && localPlayer.getPlayerNumber() == 1) otherPlayer = new Player("Mate",0,0,0,2);
+  else if(otherPlayer == null && localPlayer.getPlayerNumber() == 2) otherPlayer = new Player("Mate",0,0,0,1);
   
   // Revive all enemies
   for (int i = 0; i < MAX_METEORITES; i++) meteorites[i].revive();
